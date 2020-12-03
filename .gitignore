@@ -1,3 +1,5 @@
+var/
 /.env.local
 /.env
 /.env.test
+public
