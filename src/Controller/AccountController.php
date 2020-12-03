@@ -33,6 +33,7 @@ class AccountController extends AbstractController
     public function edit(Request $request, EntityManagerInterface $em, UserPasswordEncoderInterface $passwordEncoder) : Response
     {
         $user = $this->getUser();
+        $orginalMail = $user->getEmail();
 
         $form = $this->createForm(UserFormType::class, $user);
 
@@ -40,6 +41,12 @@ class AccountController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid())
         {
+            if($form['email']->getData() != $orginalMail)
+            {
+                $user->setIsVerified(false);
+                // dd('new'.$form['email']->getData(), 'orginal'.$orginalMail);
+            }
+
             $em->flush();
 
             $this->addFlash('success', 'Account updated successfully!');
