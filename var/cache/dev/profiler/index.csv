@@ -247,3 +247,11 @@ fdfa48,127.0.0.1,GET,https://127.0.0.1:8000/account,1607005622,,200
 42e3be,127.0.0.1,GET,https://127.0.0.1:8000/account,1607005635,,200
 ac57cd,127.0.0.1,GET,https://127.0.0.1:8000/account,1607005672,,200
 96da83,127.0.0.1,GET,https://127.0.0.1:8000/account,1607005698,,200
+029694,127.0.0.1,GET,https://127.0.0.1:8000/account,1607008838,,200
+29eea7,127.0.0.1,GET,https://127.0.0.1:8000/account,1607008841,,200
+6b38df,127.0.0.1,GET,https://127.0.0.1:8000/account/change-password,1607008844,75fc0d,500
+75fc0d,127.0.0.1,GET,https://127.0.0.1:8000/account/change-password,1607008844,,500
+583047,127.0.0.1,GET,https://127.0.0.1:8000/account/change-password,1607008870,,200
+4e4711,127.0.0.1,GET,https://127.0.0.1:8000/account/change-password,1607009521,,200
+2648e7,127.0.0.1,POST,https://127.0.0.1:8000/account/change-password,1607009529,,302
+4dbe33,127.0.0.1,GET,https://127.0.0.1:8000/account,1607009529,,200

@@ -15,6 +15,7 @@ return [
         '/_profiler/open' => [[['_route' => '_profiler_open_file', '_controller' => 'web_profiler.controller.profiler::openAction'], null, null, null, false, false, null]],
         '/account' => [[['_route' => 'app_account', '_controller' => 'App\\Controller\\AccountController::show'], null, ['GET' => 0], null, false, false, null]],
         '/account/edit' => [[['_route' => 'app_account_edit', '_controller' => 'App\\Controller\\AccountController::edit'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        '/account/change-password' => [[['_route' => 'app_account_changePassword', '_controller' => 'App\\Controller\\AccountController::changePassword'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/' => [[['_route' => 'app_home', '_controller' => 'App\\Controller\\PinsController::index'], null, ['GET' => 0], null, false, false, null]],
         '/pins/create' => [[['_route' => 'app_pins_create', '_controller' => 'App\\Controller\\PinsController::create'], null, ['GET' => 0, 'PUT' => 1], null, false, false, null]],
         '/register' => [[['_route' => 'app_register', '_controller' => 'App\\Controller\\RegistrationController::register'], null, null, null, false, false, null]],
