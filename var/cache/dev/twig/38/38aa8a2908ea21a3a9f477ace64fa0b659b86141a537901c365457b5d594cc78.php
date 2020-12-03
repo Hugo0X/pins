@@ -63,7 +63,10 @@ class __TwigTemplate_ebfe8ed734ebb72139bfb27741a4245f90dcc072805e67135f2c58763f6
             echo "\">New Pin</a>
         </li>
         <li class=\"nav-item\">
-          <a class=\"nav-link\" href=\"#\">Account</a>
+          <a class=\"nav-link\" href=\"";
+            // line 15
+            echo $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_account");
+            echo "\">Account</a>
         </li>
         <li class=\"nav-item\">
           <a class=\"nav-link\" href=\"#\" onclick=\"event.preventDefault(); document.getElementById('js-logout-form').submit();\">Logout</a>
@@ -120,7 +123,7 @@ class __TwigTemplate_ebfe8ed734ebb72139bfb27741a4245f90dcc072805e67135f2c58763f6
 
     public function getDebugInfo()
     {
-        return array (  99 => 32,  93 => 29,  87 => 26,  84 => 25,  78 => 22,  74 => 21,  62 => 12,  59 => 11,  57 => 10,  47 => 3,  43 => 1,);
+        return array (  102 => 32,  96 => 29,  90 => 26,  87 => 25,  81 => 22,  77 => 21,  68 => 15,  62 => 12,  59 => 11,  57 => 10,  47 => 3,  43 => 1,);
     }
 
     public function getSourceContext()
@@ -139,7 +142,7 @@ class __TwigTemplate_ebfe8ed734ebb72139bfb27741a4245f90dcc072805e67135f2c58763f6
           <a class=\"nav-link\" href=\"{{ path('app_pins_create') }}\">New Pin</a>
         </li>
         <li class=\"nav-item\">
-          <a class=\"nav-link\" href=\"#\">Account</a>
+          <a class=\"nav-link\" href=\"{{ path('app_account') }}\">Account</a>
         </li>
         <li class=\"nav-item\">
           <a class=\"nav-link\" href=\"#\" onclick=\"event.preventDefault(); document.getElementById('js-logout-form').submit();\">Logout</a>

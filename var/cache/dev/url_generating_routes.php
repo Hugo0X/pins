@@ -16,6 +16,7 @@ return [
     '_profiler_exception' => [['token'], ['_controller' => 'web_profiler.controller.exception_panel::body'], [], [['text', '/exception'], ['variable', '/', '[^/]++', 'token', true], ['text', '/_profiler']], [], []],
     '_profiler_exception_css' => [['token'], ['_controller' => 'web_profiler.controller.exception_panel::stylesheet'], [], [['text', '/exception.css'], ['variable', '/', '[^/]++', 'token', true], ['text', '/_profiler']], [], []],
     'app_account' => [[], ['_controller' => 'App\\Controller\\AccountController::show'], [], [['text', '/account']], [], []],
+    'app_account_edit' => [[], ['_controller' => 'App\\Controller\\AccountController::edit'], [], [['text', '/account/edit']], [], []],
     'app_home' => [[], ['_controller' => 'App\\Controller\\PinsController::index'], [], [['text', '/']], [], []],
     'app_pins_create' => [[], ['_controller' => 'App\\Controller\\PinsController::create'], [], [['text', '/pins/create']], [], []],
     'app_pins_show' => [['id'], ['_controller' => 'App\\Controller\\PinsController::show'], ['id' => '[0-9]+'], [['variable', '/', '[0-9]+', 'id', true], ['text', '/pins']], [], []],
