@@ -85,62 +85,66 @@ class __TwigTemplate_18f298d1f06676217a189a6f5100710b30f0f8133d446a8d3a2d1ecbbba
         $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02->enter($__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "body"));
 
         // line 5
-        echo "    ";
-        if ((1 === twig_compare(twig_length_filter($this->env, (isset($context["pins"]) || array_key_exists("pins", $context) ? $context["pins"] : (function () { throw new RuntimeError('Variable "pins" does not exist.', 5, $this->source); })())), 0))) {
-            // line 6
+        echo "
+    ";
+        // line 6
+        if ((1 === twig_compare(twig_length_filter($this->env, (isset($context["pins"]) || array_key_exists("pins", $context) ? $context["pins"] : (function () { throw new RuntimeError('Variable "pins" does not exist.', 6, $this->source); })())), 0))) {
+            // line 7
             echo "    
         <h1 class=\"mb-4 text-center text-muted\">";
-            // line 7
-            echo twig_escape_filter($this->env, $this->extensions['App\Twig\AppExtension']->pluralize(twig_length_filter($this->env, (isset($context["pins"]) || array_key_exists("pins", $context) ? $context["pins"] : (function () { throw new RuntimeError('Variable "pins" does not exist.', 7, $this->source); })())), "Pin"), "html", null, true);
-            echo "<h1>
+            // line 8
+            echo twig_escape_filter($this->env, $this->extensions['App\Twig\AppExtension']->pluralize(twig_length_filter($this->env, (isset($context["pins"]) || array_key_exists("pins", $context) ? $context["pins"] : (function () { throw new RuntimeError('Variable "pins" does not exist.', 8, $this->source); })())), "Pin"), "html", null, true);
+            echo "</h1>
             
             ";
-            // line 9
+            // line 10
             $context['_parent'] = $context;
-            $context['_seq'] = twig_ensure_traversable(twig_array_batch((isset($context["pins"]) || array_key_exists("pins", $context) ? $context["pins"] : (function () { throw new RuntimeError('Variable "pins" does not exist.', 9, $this->source); })()), 3));
+            $context['_seq'] = twig_ensure_traversable(twig_array_batch((isset($context["pins"]) || array_key_exists("pins", $context) ? $context["pins"] : (function () { throw new RuntimeError('Variable "pins" does not exist.', 10, $this->source); })()), 3));
             foreach ($context['_seq'] as $context["_key"] => $context["row"]) {
-                // line 10
+                // line 11
                 echo "                <div class=\"row\">
                     ";
-                // line 11
+                // line 12
                 $context['_parent'] = $context;
                 $context['_seq'] = twig_ensure_traversable($context["row"]);
                 foreach ($context['_seq'] as $context["_key"] => $context["pin"]) {
-                    // line 12
+                    // line 13
                     echo "                        <div class=\"col-md-4\">
-                            <article class=\"pin bg-white rounded shadow\">
+                            <article class=\"my-2 pin bg-white rounded shadow\">
                                 <div class =\"mw-100 overflow-hidden rounded-top\">
                                     <a href=\"";
-                    // line 15
-                    echo twig_escape_filter($this->env, $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_pins_show", ["id" => twig_get_attribute($this->env, $this->source, $context["pin"], "id", [], "any", false, false, false, 15)]), "html", null, true);
+                    // line 16
+                    echo twig_escape_filter($this->env, $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_pins_show", ["id" => twig_get_attribute($this->env, $this->source, $context["pin"], "id", [], "any", false, false, false, 16)]), "html", null, true);
                     echo "\">
                                         <img src=\"";
-                    // line 16
-                    echo twig_escape_filter($this->env, $this->extensions['Liip\ImagineBundle\Templating\FilterExtension']->filter(((twig_get_attribute($this->env, $this->source, $context["pin"], "imageName", [], "any", false, false, false, 16)) ? ($this->extensions['Vich\UploaderBundle\Twig\Extension\UploaderExtension']->asset($context["pin"])) : ($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("build/images/defaultPicture.png"))), "squared_thumbnail_medium"), "html", null, true);
+                    // line 17
+                    echo twig_escape_filter($this->env, $this->extensions['Liip\ImagineBundle\Templating\FilterExtension']->filter(((twig_get_attribute($this->env, $this->source, $context["pin"], "imageName", [], "any", false, false, false, 17)) ? ($this->extensions['Vich\UploaderBundle\Twig\Extension\UploaderExtension']->asset($context["pin"])) : ($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("build/images/defaultPicture.png"))), "squared_thumbnail_medium"), "html", null, true);
                     echo "\" alt=\"";
-                    echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["pin"], "title", [], "any", false, false, false, 16), "html", null, true);
+                    echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["pin"], "title", [], "any", false, false, false, 17), "html", null, true);
                     echo "\"  class=\"w-100\"/>
                                     </a>
                                 </div>                                
-                                <h2><a class=\"h5 text-secondary text-decoration-none pl-3 pt-3\" href=\"";
-                    // line 19
-                    echo twig_escape_filter($this->env, $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_pins_show", ["id" => twig_get_attribute($this->env, $this->source, $context["pin"], "id", [], "any", false, false, false, 19)]), "html", null, true);
+                                <h2 class=\"h5 pl-3 pt-3\"><a class=\"text-secondary text-decoration-none\" href=\"";
+                    // line 20
+                    echo twig_escape_filter($this->env, $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_pins_show", ["id" => twig_get_attribute($this->env, $this->source, $context["pin"], "id", [], "any", false, false, false, 20)]), "html", null, true);
                     echo "\">";
-                    echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["pin"], "title", [], "any", false, false, false, 19), "html", null, true);
+                    echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["pin"], "title", [], "any", false, false, false, 20), "html", null, true);
                     echo "</a></h2>
                                 ";
-                    // line 21
+                    // line 22
                     echo "                                 <p class=\"pl-3 pb-3 text-muted h6\"><small>Submitted by ";
-                    echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["pin"], "user", [], "any", false, false, false, 21), "fullName", [], "any", false, false, false, 21), "html", null, true);
+                    echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, $context["pin"], "user", [], "any", false, false, false, 22), "fullName", [], "any", false, false, false, 22), "html", null, true);
                     echo " </small></p>
-                            </article>
+                                 ";
+                    // line 29
+                    echo "                            </article>
                         </div>    
                     ";
                 }
                 $_parent = $context['_parent'];
                 unset($context['_seq'], $context['_iterated'], $context['_key'], $context['pin'], $context['_parent'], $context['loop']);
                 $context = array_intersect_key($context, $_parent) + $_parent;
-                // line 24
+                // line 31
                 echo "    
                 </div>
             ";
@@ -148,10 +152,10 @@ class __TwigTemplate_18f298d1f06676217a189a6f5100710b30f0f8133d446a8d3a2d1ecbbba
             $_parent = $context['_parent'];
             unset($context['_seq'], $context['_iterated'], $context['_key'], $context['row'], $context['_parent'], $context['loop']);
             $context = array_intersect_key($context, $_parent) + $_parent;
-            // line 27
+            // line 34
             echo "    ";
         } else {
-            // line 28
+            // line 35
             echo "        <p class=\"mt-5 h1 text-center \">No pins yet. <a href=\"";
             echo $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_pins_create");
             echo "\">Be the first!</a></p>
@@ -177,7 +181,7 @@ class __TwigTemplate_18f298d1f06676217a189a6f5100710b30f0f8133d446a8d3a2d1ecbbba
 
     public function getDebugInfo()
     {
-        return array (  155 => 28,  152 => 27,  144 => 24,  133 => 21,  127 => 19,  119 => 16,  115 => 15,  110 => 12,  106 => 11,  103 => 10,  99 => 9,  94 => 7,  91 => 6,  88 => 5,  78 => 4,  59 => 3,  36 => 1,);
+        return array (  159 => 35,  156 => 34,  148 => 31,  140 => 29,  135 => 22,  129 => 20,  121 => 17,  117 => 16,  112 => 13,  108 => 12,  105 => 11,  101 => 10,  96 => 8,  93 => 7,  91 => 6,  88 => 5,  78 => 4,  59 => 3,  36 => 1,);
     }
 
     public function getSourceContext()
@@ -186,23 +190,30 @@ class __TwigTemplate_18f298d1f06676217a189a6f5100710b30f0f8133d446a8d3a2d1ecbbba
 
 {% block title 'Find all the best pins on earth' %}
 {% block body %}
+
     {% if pins|length > 0  %}
     
-        <h1 class=\"mb-4 text-center text-muted\">{{ pluralize (pins|length, 'Pin')}}<h1>
+        <h1 class=\"mb-4 text-center text-muted\">{{ pluralize (pins|length, 'Pin')}}</h1>
             
             {% for row in pins|batch(3) %}
                 <div class=\"row\">
                     {% for pin in row %}
                         <div class=\"col-md-4\">
-                            <article class=\"pin bg-white rounded shadow\">
+                            <article class=\"my-2 pin bg-white rounded shadow\">
                                 <div class =\"mw-100 overflow-hidden rounded-top\">
                                     <a href=\"{{ path('app_pins_show', {id: pin.id}) }}\">
                                         <img src=\"{{ (pin.imageName ? vich_uploader_asset(pin) : asset('build/images/defaultPicture.png')) | imagine_filter('squared_thumbnail_medium') }}\" alt=\"{{ pin.title }}\"  class=\"w-100\"/>
                                     </a>
                                 </div>                                
-                                <h2><a class=\"h5 text-secondary text-decoration-none pl-3 pt-3\" href=\"{{ path('app_pins_show', {id: pin.id}) }}\">{{ pin.title }}</a></h2>
+                                <h2 class=\"h5 pl-3 pt-3\"><a class=\"text-secondary text-decoration-none\" href=\"{{ path('app_pins_show', {id: pin.id}) }}\">{{ pin.title }}</a></h2>
                                 {# <p>{{ pin.description | u.truncate(10, '...') }}</p> #}
                                  <p class=\"pl-3 pb-3 text-muted h6\"><small>Submitted by {{ pin.user.fullName}} </small></p>
+                                 {# <a href=\"#\" onclick=\"event.preventDefault(); confirm('Are you sure?') && document.getElementById('js-pin-delete-form-{{ pin.id }}').submit();\" class=\"m-3 btn btn-danger\">&times; Delete</a>
+
+                                 <form id=\"js-pin-delete-form-{{ pin.id }}\" action=\"{{ path('app_pins_delete', {'id': pin.id}) }}\" method=\"post\" style=\"display: none;\">
+                                    <input type=\"hidden\" name=\"csrf_token\" value=\"{{ csrf_token('pin_deletion_' ~ pin.id) }}\">
+                                    <input type=\"hidden\" name=\"_method\" value=\"DELETE\">
+                                </form> #}
                             </article>
                         </div>    
                     {% endfor %}    

@@ -123,7 +123,10 @@ class __TwigTemplate_010593cf1b1dc0527f1bac1cc597c76d65a03fbebe5441e5a23844641ee
                             <label class=\"form-check-label\" for=\"_remember_me\">Remember me</label>
                     </div>
                 </div>
-                    <a href=\"#\">Forgot password?</a>
+                    <a href=\"";
+        // line 34
+        echo $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_forgot_password_request");
+        echo "\">Forgot password?</a>
                               
             </div>
 
@@ -167,7 +170,7 @@ class __TwigTemplate_010593cf1b1dc0527f1bac1cc597c76d65a03fbebe5441e5a23844641ee
 
     public function getDebugInfo()
     {
-        return array (  141 => 44,  132 => 38,  110 => 19,  102 => 13,  96 => 11,  94 => 10,  88 => 6,  78 => 5,  59 => 3,  36 => 1,);
+        return array (  144 => 44,  135 => 38,  128 => 34,  110 => 19,  102 => 13,  96 => 11,  94 => 10,  88 => 6,  78 => 5,  59 => 3,  36 => 1,);
     }
 
     public function getSourceContext()
@@ -205,7 +208,7 @@ class __TwigTemplate_010593cf1b1dc0527f1bac1cc597c76d65a03fbebe5441e5a23844641ee
                             <label class=\"form-check-label\" for=\"_remember_me\">Remember me</label>
                     </div>
                 </div>
-                    <a href=\"#\">Forgot password?</a>
+                    <a href=\"{{ path('app_forgot_password_request') }}\">Forgot password?</a>
                               
             </div>
 

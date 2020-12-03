@@ -10,12 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraint\NotBlank;
-use Symfony\Component\Validator\Constraint as Assert;
-
-    //  * @Assert\NotBlank(message="Please enter your first name")
-    //  * @Assert\NotBlank(message="Please enter your last name")
-    //  * @Assert\NotBlank(message="Please enter your email")
-    //  * @Assert\Email(message="Please enter valid email")
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints\Type;
 
     
 /**
@@ -36,18 +32,21 @@ class User implements UserInterface
     private $id;
     
     /**
+     * @Assert\NotBlank(message="Please enter your first name")
      * @ORM\Column(type="string", length=255)
      */
     private $firstName;
 
     /**
+     * @Assert\NotBlank(message="Please enter your last name")
      * @ORM\Column(type="string", length=255)  
      */
     private $lastName;
 
     /**
-     * @ORM\Column(type="string", length=255, unique=true)   
-
+     * @ORM\Column(type="string", length=255, unique=true)
+     * @Assert\Email(message="Please enter valid email")  
+     * @Assert\NotBlank(message="Please enter your email")
      */
     private $email;
 
@@ -168,7 +167,7 @@ class User implements UserInterface
      */
     public function getSalt()
     {
-        // not needed when using the "bcrypt" algorithm in security.yaml
+        
     }
 
     /**

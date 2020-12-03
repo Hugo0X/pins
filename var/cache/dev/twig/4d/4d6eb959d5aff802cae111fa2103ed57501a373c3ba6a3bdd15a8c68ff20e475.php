@@ -131,7 +131,7 @@ class __TwigTemplate_a9f76c64a60b0cec369a26b831ab0e82cc5b97751b42090421790c78436
                             <form id=\"js-pin-delete-form\" action=\"";
         // line 26
         echo twig_escape_filter($this->env, $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_pins_delete", ["id" => twig_get_attribute($this->env, $this->source, (isset($context["pin"]) || array_key_exists("pin", $context) ? $context["pin"] : (function () { throw new RuntimeError('Variable "pin" does not exist.', 26, $this->source); })()), "id", [], "any", false, false, false, 26)]), "html", null, true);
-        echo "\" methode=\"post\" style=\"display: none;\">
+        echo "\" method=\"post\" style=\"display: none;\">
                                 <input type=\"hidden\" name=\"csrf_token\" value=\"";
         // line 27
         echo twig_escape_filter($this->env, $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderCsrfToken(("pin_deletion_" . twig_get_attribute($this->env, $this->source, (isset($context["pin"]) || array_key_exists("pin", $context) ? $context["pin"] : (function () { throw new RuntimeError('Variable "pin" does not exist.', 27, $this->source); })()), "id", [], "any", false, false, false, 27))), "html", null, true);
@@ -195,10 +195,10 @@ class __TwigTemplate_a9f76c64a60b0cec369a26b831ab0e82cc5b97751b42090421790c78436
                         </p>
 
                         <div class=\"pt-3\">
-                            <a href=\"{{ path('app_pins_edit', {id: pin.id})}}\" class=\"btn btn-light\">Edit</a>
+                            <a href=\"{{ path('app_pins_edit', {'id': pin.id})}}\" class=\"btn btn-light\">Edit</a>
                             <a href=\"#\" onclick=\"event.preventDefault(); confirm('Are you sure?') && document.getElementById('js-pin-delete-form').submit();\" class=\"btn btn-light\">Delete</a>
 
-                            <form id=\"js-pin-delete-form\" action=\"{{ path('app_pins_delete', {id: pin.id}) }}\" methode=\"post\" style=\"display: none;\">
+                            <form id=\"js-pin-delete-form\" action=\"{{ path('app_pins_delete', {id: pin.id}) }}\" method=\"post\" style=\"display: none;\">
                                 <input type=\"hidden\" name=\"csrf_token\" value=\"{{ csrf_token('pin_deletion_' ~ pin.id) }}\">
                                 <input type=\"hidden\" name=\"_method\" value=\"DELETE\">
                             </form>

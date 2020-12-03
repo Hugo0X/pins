@@ -66,29 +66,36 @@ class __TwigTemplate_ebfe8ed734ebb72139bfb27741a4245f90dcc072805e67135f2c58763f6
           <a class=\"nav-link\" href=\"#\">Account</a>
         </li>
         <li class=\"nav-item\">
-          <a class=\"nav-link\" href=\"";
-            // line 18
-            echo $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_logout");
-            echo "\">Logout</a>
+          <a class=\"nav-link\" href=\"#\" onclick=\"event.preventDefault(); document.getElementById('js-logout-form').submit();\">Logout</a>
         </li>
+
+    <form id=\"js-logout-form\" action=\"";
+            // line 21
+            echo $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_logout");
+            echo "\" method=\"POST\" class=\"d-none\">
+      <input type=\"hidden\" name=\"_csrf_token\" value=\"";
+            // line 22
+            echo twig_escape_filter($this->env, $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderCsrfToken("logout"), "html", null, true);
+            echo "\">
+    </form>
     ";
         } else {
-            // line 21
+            // line 25
             echo "        <li class=\"nav-item\">
           <a class=\"nav-link\" href=\"";
-            // line 22
+            // line 26
             echo $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_register");
             echo "\">Register</a>
         </li>
         <li class=\"nav-item\">
           <a class=\"nav-link\" href=\"";
-            // line 25
+            // line 29
             echo $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_login");
             echo "\">Login</a>
         </li>
     ";
         }
-        // line 28
+        // line 32
         echo "    </ul>
   </div>
 </div>
@@ -113,7 +120,7 @@ class __TwigTemplate_ebfe8ed734ebb72139bfb27741a4245f90dcc072805e67135f2c58763f6
 
     public function getDebugInfo()
     {
-        return array (  92 => 28,  86 => 25,  80 => 22,  77 => 21,  71 => 18,  62 => 12,  59 => 11,  57 => 10,  47 => 3,  43 => 1,);
+        return array (  99 => 32,  93 => 29,  87 => 26,  84 => 25,  78 => 22,  74 => 21,  62 => 12,  59 => 11,  57 => 10,  47 => 3,  43 => 1,);
     }
 
     public function getSourceContext()
@@ -135,8 +142,12 @@ class __TwigTemplate_ebfe8ed734ebb72139bfb27741a4245f90dcc072805e67135f2c58763f6
           <a class=\"nav-link\" href=\"#\">Account</a>
         </li>
         <li class=\"nav-item\">
-          <a class=\"nav-link\" href=\"{{ path('app_logout') }}\">Logout</a>
+          <a class=\"nav-link\" href=\"#\" onclick=\"event.preventDefault(); document.getElementById('js-logout-form').submit();\">Logout</a>
         </li>
+
+    <form id=\"js-logout-form\" action=\"{{ path('app_logout') }}\" method=\"POST\" class=\"d-none\">
+      <input type=\"hidden\" name=\"_csrf_token\" value=\"{{ csrf_token('logout') }}\">
+    </form>
     {% else %}
         <li class=\"nav-item\">
           <a class=\"nav-link\" href=\"{{ path('app_register') }}\">Register</a>

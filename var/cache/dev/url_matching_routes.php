@@ -17,8 +17,10 @@ return [
         '/pins/create' => [[['_route' => 'app_pins_create', '_controller' => 'App\\Controller\\PinsController::create'], null, ['GET' => 0, 'PUT' => 1], null, false, false, null]],
         '/register' => [[['_route' => 'app_register', '_controller' => 'App\\Controller\\RegistrationController::register'], null, null, null, false, false, null]],
         '/verify/email' => [[['_route' => 'app_verify_email', '_controller' => 'App\\Controller\\RegistrationController::verifyUserEmail'], null, null, null, false, false, null]],
+        '/reset-password' => [[['_route' => 'app_forgot_password_request', '_controller' => 'App\\Controller\\ResetPasswordController::request'], null, null, null, false, false, null]],
+        '/reset-password/check-email' => [[['_route' => 'app_check_email', '_controller' => 'App\\Controller\\ResetPasswordController::checkEmail'], null, null, null, false, false, null]],
         '/login' => [[['_route' => 'app_login', '_controller' => 'App\\Controller\\SecurityController::login'], null, null, null, false, false, null]],
-        '/logout' => [[['_route' => 'app_logout', '_controller' => 'App\\Controller\\SecurityController::logout'], null, null, null, false, false, null]],
+        '/logout' => [[['_route' => 'app_logout', '_controller' => 'App\\Controller\\SecurityController::logout'], null, ['POST' => 0], null, false, false, null]],
     ],
     [ // $regexpList
         0 => '{^(?'
@@ -42,9 +44,10 @@ return [
                     .'|([0-9]+)/edit(*:207)'
                     .'|([0-9]+)(*:223)'
                 .')'
+                .'|/reset\\-password/reset(?:/([^/]++))?(*:268)'
                 .'|/media/cache/resolve/(?'
-                    .'|([A-z0-9_-]*)/rc/([^/]++)/(.+)(*:286)'
-                    .'|([A-z0-9_-]*)/(.+)(*:312)'
+                    .'|([A-z0-9_-]*)/rc/([^/]++)/(.+)(*:330)'
+                    .'|([A-z0-9_-]*)/(.+)(*:356)'
                 .')'
             .')/?$}sDu',
     ],
@@ -59,8 +62,9 @@ return [
         186 => [[['_route' => 'app_pins_show', '_controller' => 'App\\Controller\\PinsController::show'], ['id'], ['GET' => 0], null, false, true, null]],
         207 => [[['_route' => 'app_pins_edit', '_controller' => 'App\\Controller\\PinsController::edit'], ['id'], ['GET' => 0, 'PUT' => 1], null, false, false, null]],
         223 => [[['_route' => 'app_pins_delete', '_controller' => 'App\\Controller\\PinsController::delete'], ['id'], ['DELETE' => 0], null, false, true, null]],
-        286 => [[['_route' => 'liip_imagine_filter_runtime', '_controller' => 'Liip\\ImagineBundle\\Controller\\ImagineController::filterRuntimeAction'], ['filter', 'hash', 'path'], ['GET' => 0], null, false, true, null]],
-        312 => [
+        268 => [[['_route' => 'app_reset_password', 'token' => null, '_controller' => 'App\\Controller\\ResetPasswordController::reset'], ['token'], null, null, false, true, null]],
+        330 => [[['_route' => 'liip_imagine_filter_runtime', '_controller' => 'Liip\\ImagineBundle\\Controller\\ImagineController::filterRuntimeAction'], ['filter', 'hash', 'path'], ['GET' => 0], null, false, true, null]],
+        356 => [
             [['_route' => 'liip_imagine_filter', '_controller' => 'Liip\\ImagineBundle\\Controller\\ImagineController::filterAction'], ['filter', 'path'], ['GET' => 0], null, false, true, null],
             [null, null, null, null, false, false, 0],
         ],
