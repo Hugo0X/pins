@@ -381,6 +381,17 @@ class User extends \App\Entity\User implements \Doctrine\ORM\Proxy\Proxy
     /**
      * {@inheritDoc}
      */
+    public function gravatar(?int $size = 100): string
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'gravatar', [$size]);
+
+        return parent::gravatar($size);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function isVerified(): bool
     {
 
