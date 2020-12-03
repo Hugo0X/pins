@@ -44,7 +44,6 @@ class AccountController extends AbstractController
             if($form['email']->getData() != $orginalMail)
             {
                 $user->setIsVerified(false);
-                // dd('new'.$form['email']->getData(), 'orginal'.$orginalMail);
             }
 
             $em->flush();
