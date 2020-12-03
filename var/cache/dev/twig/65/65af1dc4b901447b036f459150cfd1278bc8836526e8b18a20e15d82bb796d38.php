@@ -120,7 +120,7 @@ class __TwigTemplate_72e8b1ef3e6fa626641307c5f8ec09cad2fa17093ae91a810d9184df275
         echo "
                 
 
-                <button class=\"btn btn-primary\">Send password reset email</button>
+                <button type=\"submit\" class=\"btn btn-primary btn-lg btn-block\">Send password reset email</button>
             ";
         // line 24
         echo         $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderBlock((isset($context["requestForm"]) || array_key_exists("requestForm", $context) ? $context["requestForm"] : (function () { throw new RuntimeError('Variable "requestForm" does not exist.', 24, $this->source); })()), 'form_end');
@@ -175,7 +175,7 @@ class __TwigTemplate_72e8b1ef3e6fa626641307c5f8ec09cad2fa17093ae91a810d9184df275
                 {{ form_row(requestForm.email) }}
                 
 
-                <button class=\"btn btn-primary\">Send password reset email</button>
+                <button type=\"submit\" class=\"btn btn-primary btn-lg btn-block\">Send password reset email</button>
             {{ form_end(requestForm) }}
         </div>
     </div>

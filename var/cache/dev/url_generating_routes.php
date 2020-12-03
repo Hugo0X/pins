@@ -15,7 +15,7 @@ return [
     '_profiler_router' => [['token'], ['_controller' => 'web_profiler.controller.router::panelAction'], [], [['text', '/router'], ['variable', '/', '[^/]++', 'token', true], ['text', '/_profiler']], [], []],
     '_profiler_exception' => [['token'], ['_controller' => 'web_profiler.controller.exception_panel::body'], [], [['text', '/exception'], ['variable', '/', '[^/]++', 'token', true], ['text', '/_profiler']], [], []],
     '_profiler_exception_css' => [['token'], ['_controller' => 'web_profiler.controller.exception_panel::stylesheet'], [], [['text', '/exception.css'], ['variable', '/', '[^/]++', 'token', true], ['text', '/_profiler']], [], []],
-    'app_account' => [[], ['_controller' => 'App\\Controller\\AccountController::show'], [], [['text', '/account']], [], []],
+    'app_account' => [[], ['_controller' => 'App\\Controller\\AccountController::show'], [], [['text', '/account/']], [], []],
     'app_account_edit' => [[], ['_controller' => 'App\\Controller\\AccountController::edit'], [], [['text', '/account/edit']], [], []],
     'app_account_changePassword' => [[], ['_controller' => 'App\\Controller\\AccountController::changePassword'], [], [['text', '/account/change-password']], [], []],
     'app_home' => [[], ['_controller' => 'App\\Controller\\PinsController::index'], [], [['text', '/']], [], []],

@@ -16,6 +16,6 @@ if (!\class_exists(App_KernelDevDebugContainer::class, false)) {
 
 return new \ContainerMirWDhL\App_KernelDevDebugContainer([
     'container.build_hash' => 'MirWDhL',
-    'container.build_id' => 'a3e5d192',
-    'container.build_time' => 1607009515,
+    'container.build_id' => 'f5e7596d',
+    'container.build_time' => 1607014176,
 ], __DIR__.\DIRECTORY_SEPARATOR.'ContainerMirWDhL');
