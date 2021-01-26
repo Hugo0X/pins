@@ -17,7 +17,7 @@
                                         <img src="{{ (pin.imageName ? vich_uploader_asset(pin) : asset('build/images/defaultPicture.png')) | imagine_filter('squared_thumbnail_medium') }}" alt="{{ pin.title }}"  class="w-100"/>
                                     </a>
                                 </div>                                
-                                <h2 class="h5 pl-3 pt-3"><a class="text-secondary text-decoration-none" href="{{ path('app_pins_show', {id: pin.id}) }}">{{ pin.title }}</a></h2>
+                                <h2 class="h5 pl-3 pt-3"><a class="text-secondary text-decoration-none" href="{{ path('app_pins_show', {id: pin.id}) }}">{{ pin.title | u.truncate(50, '...') }}</a></h2>
                                 {# <p>{{ pin.description | u.truncate(10, '...') }}</p> #}
                                  <p class="pl-3 pb-3 text-muted h6"><small>Submitted by {{ pin.user.fullName}} </small></p>
                                  {# <a href="#" onclick="event.preventDefault(); confirm('Are you sure?') && document.getElementById('js-pin-delete-form-{{ pin.id }}').submit();" class="m-3 btn btn-danger">&times; Delete</a>
