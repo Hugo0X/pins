@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Knp\Component\Pager\PaginatorInterface;
 
 
 
@@ -26,11 +27,17 @@ class PinsController extends AbstractController
     /**
      * @Route("/", name="app_home", methods={"GET"})
     */
-    public function index(PinRepository $pinRepository) : Response
+    public function index(PinRepository $pinRepository, PaginatorInterface $paginator, Request $request) : Response
     {
         $pins = $pinRepository->findBy([], ['createdAt' => 'DESC']);
 
-        return $this->render('pins/index.html.twig', compact('pins'));
+        $page = $paginator->paginate(
+            $pins, /* query NOT result */
+            $request->query->getInt('page', 1), /*page number*/
+            9 /*limit per page*/
+        );
+
+        return $this->render('pins/index.html.twig', ['pins' => $page] );
     }
 
     /**

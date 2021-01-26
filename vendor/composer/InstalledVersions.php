@@ -19,7 +19,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => 'c0a3225f7da82ac79fa810d9e607b1f5d73fc519',
+    'reference' => 'bee878f1d0734f9fb1cb82a3385829e05edf5c96',
     'name' => '__root__',
   ),
   'versions' => 
@@ -31,7 +31,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => 'c0a3225f7da82ac79fa810d9e607b1f5d73fc519',
+      'reference' => 'bee878f1d0734f9fb1cb82a3385829e05edf5c96',
     ),
     'composer/package-versions-deprecated' => 
     array (
@@ -221,6 +221,24 @@ private static $installed = array (
       array (
       ),
       'reference' => '6eb35fce7142234946d58d13e1aa829e9b78b095',
+    ),
+    'knplabs/knp-components' => 
+    array (
+      'pretty_version' => 'v3.0.0',
+      'version' => '3.0.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '246b700fdc40020f1db1c887cd462b9b9d3b79b0',
+    ),
+    'knplabs/knp-paginator-bundle' => 
+    array (
+      'pretty_version' => 'v5.4.2',
+      'version' => '5.4.2.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '8a7255062dd9f6ff8a3a4712a4b34bdbbc9f31f7',
     ),
     'knplabs/knp-time-bundle' => 
     array (
