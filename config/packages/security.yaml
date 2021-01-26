@@ -26,7 +26,7 @@ security:
                 csrf_token_generator: Symfony\Component\Security\Csrf\CsrfTokenManagerInterface
                 path: app_logout
                 # where to redirect after logout
-                # target: app_any_route
+                target: app_login
             remember_me:
                 secret: '%kernel.secret%'
 
@@ -38,6 +38,14 @@ security:
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
+
+    # just for TEST, must be CHANGE
+    # role_hierarchy:
+    #     ROLE_READER: ROLE_USER
+    #     ROLE_AUTHOR: ROLE_ADMIN
+
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: '^/login', roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: '^/*pins', roles: ROLE_ADMIN }
+        - { path: '^/*home', roles: ROLE_USER }
+        - { path: '^/*', roles: [ROLE_ADMIN, ROLE_USER] }

@@ -252,7 +252,14 @@
     <parameter key="doctrine.orm.proxy_namespace">Proxies</parameter>
     <parameter key="doctrine.migrations.preferred_em">null</parameter>
     <parameter key="doctrine.migrations.preferred_connection">null</parameter>
-    <parameter key="security.role_hierarchy.roles" type="collection"/>
+    <parameter key="security.role_hierarchy.roles" type="collection">
+      <parameter key="ROLE_READER" type="collection">
+        <parameter>ROLE_USER</parameter>
+      </parameter>
+      <parameter key="ROLE_AUTHOR" type="collection">
+        <parameter>ROLE_ADMIN</parameter>
+      </parameter>
+    </parameter>
     <parameter key="security.access.denied_url">null</parameter>
     <parameter key="security.authentication.manager.erase_credentials">true</parameter>
     <parameter key="security.authentication.session_strategy.strategy">migrate</parameter>
@@ -4522,14 +4529,15 @@
       <argument type="service" id="debug.event_dispatcher"/>
     </service>
     <service id="security.role_hierarchy" class="Symfony\Component\Security\Core\Role\RoleHierarchy" public="false">
-      <argument type="collection"/>
-    </service>
-    <service id="security.access.simple_role_voter" class="Symfony\Component\Security\Core\Authorization\Voter\RoleVoter" public="false">
-      <tag name="security.voter" priority="245"/>
+      <argument>%security.role_hierarchy.roles%</argument>
     </service>
     <service id="security.access.authenticated_voter" class="Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter" public="false">
       <tag name="security.voter" priority="250"/>
       <argument type="service" id="security.authentication.trust_resolver"/>
+    </service>
+    <service id="security.access.role_hierarchy_voter" class="Symfony\Component\Security\Core\Authorization\Voter\RoleHierarchyVoter" public="false">
+      <tag name="security.voter" priority="245"/>
+      <argument type="service" id="security.role_hierarchy"/>
     </service>
     <service id="security.access.expression_voter" class="Symfony\Component\Security\Core\Authorization\Voter\ExpressionVoter" public="false">
       <tag name="security.voter" priority="245"/>
@@ -4644,7 +4652,37 @@
       <argument type="service" id="security.authentication.retry_entry_point"/>
       <argument type="service" id="monolog.logger.security" on-invalid="null"/>
     </service>
-    <service id="security.access_map" class="Symfony\Component\Security\Http\AccessMap" public="false"/>
+    <service id="security.access_map" class="Symfony\Component\Security\Http\AccessMap" public="false">
+      <call method="add">
+        <argument type="service" id=".security.request_matcher.QWkwKV5"/>
+        <argument type="collection">
+          <argument>IS_AUTHENTICATED_ANONYMOUSLY</argument>
+        </argument>
+        <argument>null</argument>
+      </call>
+      <call method="add">
+        <argument type="service" id=".security.request_matcher.TY4kYO2"/>
+        <argument type="collection">
+          <argument>ROLE_ADMIN</argument>
+        </argument>
+        <argument>null</argument>
+      </call>
+      <call method="add">
+        <argument type="service" id=".security.request_matcher.BISdFwU"/>
+        <argument type="collection">
+          <argument>ROLE_USER</argument>
+        </argument>
+        <argument>null</argument>
+      </call>
+      <call method="add">
+        <argument type="service" id=".security.request_matcher.hxjan1m"/>
+        <argument type="collection">
+          <argument>ROLE_ADMIN</argument>
+          <argument>ROLE_USER</argument>
+        </argument>
+        <argument>null</argument>
+      </call>
+    </service>
     <service id="security.context_listener" class="Symfony\Component\Security\Http\Firewall\ContextListener" public="false">
       <tag name="monolog.logger" channel="security"/>
       <argument type="service" id="security.untracked_token_storage"/>
@@ -5033,7 +5071,7 @@
     <service id="security.logout.listener.default.main" class="Symfony\Component\Security\Http\EventListener\DefaultLogoutListener" public="false">
       <tag name="kernel.event_subscriber" dispatcher="security.event_dispatcher.main"/>
       <argument type="service" id="security.http_utils"/>
-      <argument>/</argument>
+      <argument>app_login</argument>
     </service>
     <service id="security.logout.listener.session.main" class="Symfony\Component\Security\Http\EventListener\SessionLogoutListener" public="false">
       <tag name="kernel.event_subscriber" dispatcher="security.event_dispatcher.main"/>
@@ -5137,6 +5175,18 @@
         <argument key="security.firewall.map.context.dev" type="service" id="security.firewall.map.context.dev"/>
         <argument key="security.firewall.map.context.main" type="service" id="security.firewall.map.context.main"/>
       </argument>
+    </service>
+    <service id=".security.request_matcher.QWkwKV5" class="Symfony\Component\HttpFoundation\RequestMatcher" public="false">
+      <argument>^/login</argument>
+    </service>
+    <service id=".security.request_matcher.TY4kYO2" class="Symfony\Component\HttpFoundation\RequestMatcher" public="false">
+      <argument>^/*pins</argument>
+    </service>
+    <service id=".security.request_matcher.BISdFwU" class="Symfony\Component\HttpFoundation\RequestMatcher" public="false">
+      <argument>^/*home</argument>
+    </service>
+    <service id=".security.request_matcher.hxjan1m" class="Symfony\Component\HttpFoundation\RequestMatcher" public="false">
+      <argument>^/*</argument>
     </service>
     <service id="security.command.user_password_encoder" class="Symfony\Bundle\SecurityBundle\Command\UserPasswordEncoderCommand" public="false">
       <tag name="console.command" command="security:encode-password"/>
@@ -5827,7 +5877,7 @@
         <argument key="debug.security.user_value_resolver.inner" type="service" id="debug.security.user_value_resolver.inner" on-invalid="ignore_uninitialized"/>
         <argument key="debug.security.voter.security.access.authenticated_voter" type="service" id="debug.security.voter.security.access.authenticated_voter" on-invalid="ignore_uninitialized"/>
         <argument key="debug.security.voter.security.access.expression_voter" type="service" id="debug.security.voter.security.access.expression_voter" on-invalid="ignore_uninitialized"/>
-        <argument key="debug.security.voter.security.access.simple_role_voter" type="service" id="debug.security.voter.security.access.simple_role_voter" on-invalid="ignore_uninitialized"/>
+        <argument key="debug.security.voter.security.access.role_hierarchy_voter" type="service" id="debug.security.voter.security.access.role_hierarchy_voter" on-invalid="ignore_uninitialized"/>
         <argument key="debug.security.voter.vote_listener" type="service" id="debug.security.voter.vote_listener" on-invalid="ignore_uninitialized"/>
         <argument key="debug.stopwatch" type="service" id="debug.stopwatch" on-invalid="ignore_uninitialized"/>
         <argument key="debug.validator" type="service" id="debug.validator" on-invalid="ignore_uninitialized"/>
@@ -6153,7 +6203,7 @@
         <argument key="security.access.authenticated_voter" type="service" id="security.access.authenticated_voter" on-invalid="ignore_uninitialized"/>
         <argument key="security.access.decision_manager" type="service" id="debug.security.access.decision_manager" on-invalid="ignore_uninitialized"/>
         <argument key="security.access.expression_voter" type="service" id="security.access.expression_voter" on-invalid="ignore_uninitialized"/>
-        <argument key="security.access.simple_role_voter" type="service" id="security.access.simple_role_voter" on-invalid="ignore_uninitialized"/>
+        <argument key="security.access.role_hierarchy_voter" type="service" id="security.access.role_hierarchy_voter" on-invalid="ignore_uninitialized"/>
         <argument key="security.access_listener" type="service" id="security.access_listener" on-invalid="ignore_uninitialized"/>
         <argument key="security.access_map" type="service" id="security.access_map" on-invalid="ignore_uninitialized"/>
         <argument key="security.authentication.basic_entry_point" type="service" id="security.authentication.basic_entry_point" on-invalid="ignore_uninitialized"/>
@@ -7734,8 +7784,8 @@
       <argument type="service" id="security.access.authenticated_voter"/>
       <argument type="service" id="debug.event_dispatcher"/>
     </service>
-    <service id="debug.security.voter.security.access.simple_role_voter" class="Symfony\Component\Security\Core\Authorization\Voter\TraceableVoter">
-      <argument type="service" id="security.access.simple_role_voter"/>
+    <service id="debug.security.voter.security.access.role_hierarchy_voter" class="Symfony\Component\Security\Core\Authorization\Voter\TraceableVoter">
+      <argument type="service" id="security.access.role_hierarchy_voter"/>
       <argument type="service" id="debug.event_dispatcher"/>
     </service>
     <service id="debug.security.voter.security.access.expression_voter" class="Symfony\Component\Security\Core\Authorization\Voter\TraceableVoter">
@@ -8097,7 +8147,7 @@
     <service id="debug.security.access.decision_manager.inner" class="Symfony\Component\Security\Core\Authorization\AccessDecisionManager" public="false">
       <argument type="iterator">
         <argument type="service" id="debug.security.voter.security.access.authenticated_voter"/>
-        <argument type="service" id="debug.security.voter.security.access.simple_role_voter"/>
+        <argument type="service" id="debug.security.voter.security.access.role_hierarchy_voter"/>
         <argument type="service" id="debug.security.voter.security.access.expression_voter"/>
       </argument>
       <argument>affirmative</argument>
