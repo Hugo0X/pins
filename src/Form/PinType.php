@@ -3,12 +3,15 @@
 namespace App\Form;
 
 use App\Entity\Pin;
+use App\Entity\Category;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Vich\UploaderBundle\Form\Type\VichImageType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class PinType extends AbstractType
 {
@@ -26,6 +29,7 @@ class PinType extends AbstractType
                 // 'image_uri' => true,
                 // 'asset_helper' => true,
         ])
+            ->add('category',EntityType::class, ['label' => 'Catégorie', 'class' => Category::class, 'choice_label' => 'title', 'multiple' => false, 'expanded' => false])
             ->add('title', TextType::class)
             ->add('description', TextareaType::class)
         ;
