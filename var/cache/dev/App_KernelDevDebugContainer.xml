@@ -526,6 +526,10 @@
         <argument type="service" id=".service_locator.g9CqTPp.App\Controller\SecurityController"/>
       </call>
     </service>
+    <service id="App\EventSubscriber\LougoutEventSubscriber" class="App\EventSubscriber\LougoutEventSubscriber" autowire="true" autoconfigure="true">
+      <tag name="kernel.event_subscriber"/>
+      <argument type="service" id="router.default"/>
+    </service>
     <service id="App\Form\ChangePasswordFormType" class="App\Form\ChangePasswordFormType" autowire="true" autoconfigure="true">
       <tag name="form.type"/>
     </service>
@@ -546,10 +550,6 @@
       <argument type="service" id="doctrine"/>
     </service>
     <service id="App\Repository\PinRepository" class="App\Repository\PinRepository" autowire="true" autoconfigure="true">
-      <tag name="doctrine.repository_service"/>
-      <argument type="service" id="doctrine"/>
-    </service>
-    <service id="App\Repository\PinsRepository" class="App\Repository\PinsRepository" autowire="true" autoconfigure="true">
       <tag name="doctrine.repository_service"/>
       <argument type="service" id="doctrine"/>
     </service>
@@ -2658,6 +2658,14 @@
         <argument>0</argument>
       </call>
       <call method="addListener">
+        <argument>Symfony\Component\Security\Http\Event\LogoutEvent</argument>
+        <argument type="collection">
+          <argument type="service" id="App\EventSubscriber\LougoutEventSubscriber"/>
+          <argument>onLogoutEvent</argument>
+        </argument>
+        <argument>0</argument>
+      </call>
+      <call method="addListener">
         <argument>kernel.response</argument>
         <argument type="collection">
           <argument type="service" id="response_listener"/>
@@ -4077,7 +4085,7 @@
       <factory class="Doctrine\ORM\EntityManager" method="create"/>
     </service>
     <service id="doctrine.orm.container_repository_factory" class="Doctrine\Bundle\DoctrineBundle\Repository\ContainerRepositoryFactory" public="false">
-      <argument type="service" id=".service_locator.H4l2jrq"/>
+      <argument type="service" id=".service_locator.O66mfzU"/>
     </service>
     <service id="doctrine.orm.manager_configurator.abstract" class="Doctrine\Bundle\DoctrineBundle\ManagerConfigurator" abstract="true">
       <argument type="collection"/>
@@ -4657,6 +4665,13 @@
         <argument>null</argument>
       </call>
       <call method="add">
+        <argument type="service" id=".security.request_matcher.O7Tsk.w"/>
+        <argument type="collection">
+          <argument>IS_AUTHENTICATED_ANONYMOUSLY</argument>
+        </argument>
+        <argument>null</argument>
+      </call>
+      <call method="add">
         <argument type="service" id=".security.request_matcher.TY4kYO2"/>
         <argument type="collection">
           <argument>ROLE_ADMIN</argument>
@@ -5029,6 +5044,14 @@
       <call method="addListener">
         <argument>Symfony\Component\Security\Http\Event\LogoutEvent</argument>
         <argument type="collection">
+          <argument type="service" id="App\EventSubscriber\LougoutEventSubscriber"/>
+          <argument>onLogoutEvent</argument>
+        </argument>
+        <argument>0</argument>
+      </call>
+      <call method="addListener">
+        <argument>Symfony\Component\Security\Http\Event\LogoutEvent</argument>
+        <argument type="collection">
           <argument type="service" id="security.logout.listener.csrf_token_clearing"/>
           <argument>onLogout</argument>
         </argument>
@@ -5174,6 +5197,9 @@
     </service>
     <service id=".security.request_matcher.QWkwKV5" class="Symfony\Component\HttpFoundation\RequestMatcher" public="false">
       <argument>^/login</argument>
+    </service>
+    <service id=".security.request_matcher.O7Tsk.w" class="Symfony\Component\HttpFoundation\RequestMatcher" public="false">
+      <argument>^/register</argument>
     </service>
     <service id=".security.request_matcher.TY4kYO2" class="Symfony\Component\HttpFoundation\RequestMatcher" public="false">
       <argument>^/*pins</argument>
@@ -5596,6 +5622,7 @@
     <service id="test.private_services_locator" class="Symfony\Component\DependencyInjection\ServiceLocator" public="true">
       <tag name="container.service_locator"/>
       <argument type="collection">
+        <argument key="App\EventSubscriber\LougoutEventSubscriber" type="service" id="App\EventSubscriber\LougoutEventSubscriber" on-invalid="ignore_uninitialized"/>
         <argument key="App\Form\ChangePasswordFormType" type="service" id="App\Form\ChangePasswordFormType" on-invalid="ignore_uninitialized"/>
         <argument key="App\Form\PinType" type="service" id="App\Form\PinType" on-invalid="ignore_uninitialized"/>
         <argument key="App\Form\RegistrationFormType" type="service" id="App\Form\RegistrationFormType" on-invalid="ignore_uninitialized"/>
@@ -5603,7 +5630,6 @@
         <argument key="App\Form\UserFormType" type="service" id="App\Form\UserFormType" on-invalid="ignore_uninitialized"/>
         <argument key="App\Repository\CategoryRepository" type="service" id="App\Repository\CategoryRepository" on-invalid="ignore_uninitialized"/>
         <argument key="App\Repository\PinRepository" type="service" id="App\Repository\PinRepository" on-invalid="ignore_uninitialized"/>
-        <argument key="App\Repository\PinsRepository" type="service" id="App\Repository\PinsRepository" on-invalid="ignore_uninitialized"/>
         <argument key="App\Repository\ResetPasswordRequestRepository" type="service" id="App\Repository\ResetPasswordRequestRepository" on-invalid="ignore_uninitialized"/>
         <argument key="App\Repository\UserRepository" type="service" id="App\Repository\UserRepository" on-invalid="ignore_uninitialized"/>
         <argument key="App\Security\EmailVerifier" type="service" id="App\Security\EmailVerifier" on-invalid="ignore_uninitialized"/>
@@ -7314,6 +7340,8 @@
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\SecurityController" class="App\Controller\SecurityController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\SecurityController" class="App\Controller\SecurityController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\SecurityController" class="App\Controller\SecurityController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\EventDispatcher\EventSubscriberInterface.0.App\EventSubscriber\LougoutEventSubscriber" class="App\EventSubscriber\LougoutEventSubscriber" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\EventSubscriber\LougoutEventSubscriber" class="App\EventSubscriber\LougoutEventSubscriber" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\ChangePasswordFormType" class="App\Form\ChangePasswordFormType" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Form\ChangePasswordFormType" class="App\Form\ChangePasswordFormType" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\PinType" class="App\Form\PinType" autowire="true" abstract="true"/>
@@ -7328,8 +7356,6 @@
     <service id=".abstract.instanceof.App\Repository\CategoryRepository" class="App\Repository\CategoryRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\PinRepository" class="App\Repository\PinRepository" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\PinRepository" class="App\Repository\PinRepository" autowire="true" autoconfigure="true" abstract="true"/>
-    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\PinsRepository" class="App\Repository\PinsRepository" autowire="true" abstract="true"/>
-    <service id=".abstract.instanceof.App\Repository\PinsRepository" class="App\Repository\PinsRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\ResetPasswordRequestRepository" class="App\Repository\ResetPasswordRequestRepository" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\ResetPasswordRequestRepository" class="App\Repository\ResetPasswordRequestRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\UserRepository" class="App\Repository\UserRepository" autowire="true" abstract="true"/>
@@ -7770,12 +7796,11 @@
         <argument key="doctrine.orm.default_listeners.attach_entity_listeners" type="service" id="doctrine.orm.default_listeners.attach_entity_listeners"/>
       </argument>
     </service>
-    <service id=".service_locator.H4l2jrq" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+    <service id=".service_locator.O66mfzU" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Repository\CategoryRepository" type="service" id="App\Repository\CategoryRepository"/>
         <argument key="App\Repository\PinRepository" type="service" id="App\Repository\PinRepository"/>
-        <argument key="App\Repository\PinsRepository" type="service" id="App\Repository\PinsRepository"/>
         <argument key="App\Repository\ResetPasswordRequestRepository" type="service" id="App\Repository\ResetPasswordRequestRepository"/>
         <argument key="App\Repository\UserRepository" type="service" id="App\Repository\UserRepository"/>
       </argument>

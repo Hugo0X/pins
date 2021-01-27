@@ -25,6 +25,7 @@ class PinsController extends AbstractController
         $this->em = $em;
     }
 
+    // #[Route('/', name='app_home', methods=['GET'])] // PHP 8
     /**
      * @Route("/", name="app_home", methods={"GET"})
     */

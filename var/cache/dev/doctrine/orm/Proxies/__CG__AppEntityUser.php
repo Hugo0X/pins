@@ -381,12 +381,12 @@ class User extends \App\Entity\User implements \Doctrine\ORM\Proxy\Proxy
     /**
      * {@inheritDoc}
      */
-    public function gravatar(?int $size = 100): string
+    public function GetGravatarUrl(?int $size = 100): string
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'gravatar', [$size]);
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'GetGravatarUrl', [$size]);
 
-        return parent::gravatar($size);
+        return parent::GetGravatarUrl($size);
     }
 
     /**
