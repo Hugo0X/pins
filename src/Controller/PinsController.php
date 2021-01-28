@@ -13,6 +13,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Knp\Component\Pager\PaginatorInterface;
+// use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 
 
@@ -80,13 +82,10 @@ class PinsController extends AbstractController
 
     /**
      * @Route("/pins/{id<[0-9]+>}/edit", name="app_pins_edit", methods={"GET", "PUT"})
+     * @IsGranted("PIN_MANAGE", subject="pin")
     */
     public function edit(Pin $pin, Request $request): Response
     {
-        if($this->getUser() != $pin->getUser()){
-            throw $this->createAccessDeniedException();
-        }
-
         $form =$this->createForm(PinType::class, $pin, [
             'method' => 'PUT'
         ]);
@@ -112,13 +111,10 @@ class PinsController extends AbstractController
    
      /**
      * @Route("/pins/{id<[0-9]+>}", name="app_pins_delete", methods={"DELETE"})
+     * @IsGranted("PIN_MANAGE", subject="pin")
      */
     public function delete(Request $request, Pin $pin, EntityManagerInterface $em): Response
-    {
-        if($this->getUser() != $pin->getUser()){
-            throw $this->createAccessDeniedException();
-        }
-        
+    {    
         if ($this->isCsrfTokenValid('pin_deletion_' . $pin->getId(), $request->request->get('csrf_token'))) {
             $em->remove($pin);
             $em->flush();

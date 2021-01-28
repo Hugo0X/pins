@@ -573,6 +573,9 @@
       <argument type="service" id="security.user_password_encoder.generic"/>
       <argument type="service" id="session"/>
     </service>
+    <service id="App\Security\Voter\PinVoter" class="App\Security\Voter\PinVoter" autowire="true" autoconfigure="true">
+      <tag name="security.voter"/>
+    </service>
     <service id="App\Twig\AppExtension" class="App\Twig\AppExtension" autowire="true" autoconfigure="true">
       <tag name="twig.extension"/>
     </service>
@@ -5634,6 +5637,7 @@
         <argument key="App\Repository\UserRepository" type="service" id="App\Repository\UserRepository" on-invalid="ignore_uninitialized"/>
         <argument key="App\Security\EmailVerifier" type="service" id="App\Security\EmailVerifier" on-invalid="ignore_uninitialized"/>
         <argument key="App\Security\LoginFormAuthenticator" type="service" id="App\Security\LoginFormAuthenticator" on-invalid="ignore_uninitialized"/>
+        <argument key="App\Security\Voter\PinVoter" type="service" id="App\Security\Voter\PinVoter" on-invalid="ignore_uninitialized"/>
         <argument key="App\Twig\AppExtension" type="service" id="App\Twig\AppExtension" on-invalid="ignore_uninitialized"/>
         <argument key="Doctrine\Common\Annotations\Reader" type="service" id="annotations.cached_reader" on-invalid="ignore_uninitialized"/>
         <argument key="Doctrine\Common\Persistence\ManagerRegistry" type="service" id="doctrine" on-invalid="ignore_uninitialized"/>
@@ -5898,6 +5902,7 @@
         <argument key="debug.security.firewall" type="service" id="debug.security.firewall" on-invalid="ignore_uninitialized"/>
         <argument key="debug.security.user_value_resolver" type="service" id="debug.security.user_value_resolver" on-invalid="ignore_uninitialized"/>
         <argument key="debug.security.user_value_resolver.inner" type="service" id="debug.security.user_value_resolver.inner" on-invalid="ignore_uninitialized"/>
+        <argument key="debug.security.voter.App\Security\Voter\PinVoter" type="service" id="debug.security.voter.App\Security\Voter\PinVoter" on-invalid="ignore_uninitialized"/>
         <argument key="debug.security.voter.security.access.authenticated_voter" type="service" id="debug.security.voter.security.access.authenticated_voter" on-invalid="ignore_uninitialized"/>
         <argument key="debug.security.voter.security.access.expression_voter" type="service" id="debug.security.voter.security.access.expression_voter" on-invalid="ignore_uninitialized"/>
         <argument key="debug.security.voter.security.access.simple_role_voter" type="service" id="debug.security.voter.security.access.simple_role_voter" on-invalid="ignore_uninitialized"/>
@@ -7360,6 +7365,8 @@
     <service id=".abstract.instanceof.App\Repository\ResetPasswordRequestRepository" class="App\Repository\ResetPasswordRequestRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\UserRepository" class="App\Repository\UserRepository" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\UserRepository" class="App\Repository\UserRepository" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\Security\Core\Authorization\Voter\VoterInterface.0.App\Security\Voter\PinVoter" class="App\Security\Voter\PinVoter" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Security\Voter\PinVoter" class="App\Security\Voter\PinVoter" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Twig\Extension\ExtensionInterface.0.App\Twig\AppExtension" class="App\Twig\AppExtension" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Twig\AppExtension" class="App\Twig\AppExtension" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".service_locator.WaGDpDt" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
@@ -7817,6 +7824,10 @@
       <argument type="service" id="security.access.expression_voter"/>
       <argument type="service" id="debug.event_dispatcher"/>
     </service>
+    <service id="debug.security.voter.App\Security\Voter\PinVoter" class="Symfony\Component\Security\Core\Authorization\Voter\TraceableVoter">
+      <argument type="service" id="App\Security\Voter\PinVoter"/>
+      <argument type="service" id="debug.event_dispatcher"/>
+    </service>
     <service id="security.logout.listener.csrf_token_clearing" class="Symfony\Component\Security\Http\EventListener\CsrfTokenClearingLogoutListener" public="false">
       <tag name="kernel.event_subscriber"/>
       <argument type="service" id="security.csrf.token_storage"/>
@@ -8174,6 +8185,7 @@
         <argument type="service" id="debug.security.voter.security.access.authenticated_voter"/>
         <argument type="service" id="debug.security.voter.security.access.simple_role_voter"/>
         <argument type="service" id="debug.security.voter.security.access.expression_voter"/>
+        <argument type="service" id="debug.security.voter.App\Security\Voter\PinVoter"/>
       </argument>
       <argument>affirmative</argument>
       <argument>false</argument>
