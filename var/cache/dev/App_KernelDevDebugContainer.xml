@@ -4632,6 +4632,14 @@
       <tag name="kernel.reset" method="reset"/>
       <argument type="service" id="cache.security_expression_language.recorder_inner"/>
     </service>
+    <service id="security.cache_warmer.expression" class="Symfony\Bundle\SecurityBundle\CacheWarmer\ExpressionCacheWarmer" public="false">
+      <tag name="kernel.cache_warmer"/>
+      <argument type="iterator">
+        <argument type="service" id=".security.expression.zk7K.eF"/>
+        <argument type="service" id=".security.expression.2VveyHg"/>
+      </argument>
+      <argument type="service" id="security.expression_language"/>
+    </service>
     <service id=".2_int~1jDzuvU" class="int" public="false">
       <factory service="router.request_context" method="getHttpsPort"/>
     </service>
@@ -4663,14 +4671,14 @@
       <call method="add">
         <argument type="service" id=".security.request_matcher.QWkwKV5"/>
         <argument type="collection">
-          <argument>IS_AUTHENTICATED_ANONYMOUSLY</argument>
+          <argument type="service" id=".security.expression.zk7K.eF"/>
         </argument>
         <argument>null</argument>
       </call>
       <call method="add">
         <argument type="service" id=".security.request_matcher.O7Tsk.w"/>
         <argument type="collection">
-          <argument>IS_AUTHENTICATED_ANONYMOUSLY</argument>
+          <argument type="service" id=".security.expression.2VveyHg"/>
         </argument>
         <argument>null</argument>
       </call>
@@ -5208,8 +5216,14 @@
     <service id=".security.request_matcher.QWkwKV5" class="Symfony\Component\HttpFoundation\RequestMatcher" public="false">
       <argument>^/login</argument>
     </service>
+    <service id=".security.expression.zk7K.eF" class="Symfony\Component\ExpressionLanguage\Expression" public="false">
+      <argument>!is_authenticated() || is_remember_me()</argument>
+    </service>
     <service id=".security.request_matcher.O7Tsk.w" class="Symfony\Component\HttpFoundation\RequestMatcher" public="false">
       <argument>^/register</argument>
+    </service>
+    <service id=".security.expression.2VveyHg" class="Symfony\Component\ExpressionLanguage\Expression" public="false">
+      <argument>!is_authenticated()</argument>
     </service>
     <service id=".security.request_matcher.bHpLOwX" class="Symfony\Component\HttpFoundation\RequestMatcher" public="false">
       <argument>^/account</argument>
@@ -5785,7 +5799,7 @@
         <argument key="annotations.reader" type="service" id="annotations.reader" on-invalid="ignore_uninitialized"/>
         <argument key="argument_metadata_factory" type="service" id="argument_metadata_factory" on-invalid="ignore_uninitialized"/>
         <argument key="argument_resolver" type="service" id="debug.argument_resolver" on-invalid="ignore_uninitialized"/>
-        <argument key="argument_resolver.controller_locator" type="service" id=".service_locator.uUfQxEg" on-invalid="ignore_uninitialized"/>
+        <argument key="argument_resolver.controller_locator" type="service" id=".service_locator.Mu9PfLh" on-invalid="ignore_uninitialized"/>
         <argument key="argument_resolver.default" type="service" id="debug.argument_resolver.default" on-invalid="ignore_uninitialized"/>
         <argument key="argument_resolver.not_tagged_controller" type="service" id="debug.argument_resolver.not_tagged_controller" on-invalid="ignore_uninitialized"/>
         <argument key="argument_resolver.request" type="service" id="debug.argument_resolver.request" on-invalid="ignore_uninitialized"/>
@@ -6261,6 +6275,7 @@
         <argument key="security.authentication.session_strategy.main" type="service" id="security.authentication.session_strategy" on-invalid="ignore_uninitialized"/>
         <argument key="security.authentication.session_strategy_noop" type="service" id="security.authentication.session_strategy_noop" on-invalid="ignore_uninitialized"/>
         <argument key="security.authentication.trust_resolver" type="service" id="security.authentication.trust_resolver" on-invalid="ignore_uninitialized"/>
+        <argument key="security.cache_warmer.expression" type="service" id="security.cache_warmer.expression" on-invalid="ignore_uninitialized"/>
         <argument key="security.channel_listener" type="service" id="security.channel_listener" on-invalid="ignore_uninitialized"/>
         <argument key="security.command.user_password_encoder" type="service" id="security.command.user_password_encoder" on-invalid="ignore_uninitialized"/>
         <argument key="security.context_listener" type="service" id="security.context_listener" on-invalid="ignore_uninitialized"/>
@@ -7639,12 +7654,6 @@
         <argument key="passwordEncoder" type="service" id="security.user_password_encoder.generic"/>
       </argument>
     </service>
-    <service id=".service_locator.IFW.IA7" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
-      <tag name="container.service_locator"/>
-      <argument type="collection">
-        <argument key="em" type="service" id="doctrine.orm.default_entity_manager"/>
-      </argument>
-    </service>
     <service id=".service_locator.XWFqqjH" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
       <argument type="collection">
@@ -7691,10 +7700,10 @@
         <argument key="authenticationUtils" type="service" id="security.authentication_utils"/>
       </argument>
     </service>
-    <service id=".service_locator.uUfQxEg" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+    <service id=".service_locator.Mu9PfLh" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
       <argument type="collection">
-        <argument key="App\Controller\AccountController::changePassword" type="service" id=".service_locator.IFW.IA7"/>
+        <argument key="App\Controller\AccountController::changePassword" type="service" id=".service_locator.efJHEIX"/>
         <argument key="App\Controller\AccountController::edit" type="service" id=".service_locator.efJHEIX"/>
         <argument key="App\Controller\PinsController::delete" type="service" id=".service_locator.bSMTVI5"/>
         <argument key="App\Controller\PinsController::edit" type="service" id=".service_locator.Tpkrt51"/>
@@ -7710,7 +7719,7 @@
         <argument key="kernel::loadRoutes" type="service" id=".service_locator.C9JCBPC"/>
         <argument key="kernel::registerContainerConfiguration" type="service" id=".service_locator.C9JCBPC"/>
         <argument key="kernel::terminate" type="service" id=".service_locator.beq5mCo"/>
-        <argument key="App\Controller\AccountController:changePassword" type="service" id=".service_locator.IFW.IA7"/>
+        <argument key="App\Controller\AccountController:changePassword" type="service" id=".service_locator.efJHEIX"/>
         <argument key="App\Controller\AccountController:edit" type="service" id=".service_locator.efJHEIX"/>
         <argument key="App\Controller\PinsController:delete" type="service" id=".service_locator.bSMTVI5"/>
         <argument key="App\Controller\PinsController:edit" type="service" id=".service_locator.Tpkrt51"/>
@@ -8218,12 +8227,12 @@
       <argument type="service" id="security.token_storage"/>
     </service>
     <service id="debug.argument_resolver.service.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver" public="false">
-      <argument type="service" id=".service_locator.uUfQxEg"/>
+      <argument type="service" id=".service_locator.Mu9PfLh"/>
     </service>
     <service id="debug.argument_resolver.default.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver" public="false"/>
     <service id="debug.argument_resolver.variadic.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\VariadicValueResolver" public="false"/>
     <service id="debug.argument_resolver.not_tagged_controller.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver" public="false">
-      <argument type="service" id=".service_locator.uUfQxEg"/>
+      <argument type="service" id=".service_locator.Mu9PfLh"/>
     </service>
     <service id=".debug.http_client.inner" class="Symfony\Contracts\HttpClient\HttpClientInterface" public="false">
       <argument type="collection"/>
@@ -8678,7 +8687,7 @@
     <service id="Knp\Component\Pager\PaginatorInterface" alias="knp_paginator"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.WaGDpDt" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem" public="false"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.uUfQxEg"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.Mu9PfLh"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id="Psr\Log\LoggerInterface $requestLogger" alias="monolog.logger.request"/>
     <service id="Psr\Log\LoggerInterface $consoleLogger" alias="monolog.logger.console"/>
