@@ -4675,6 +4675,13 @@
         <argument>null</argument>
       </call>
       <call method="add">
+        <argument type="service" id=".security.request_matcher.bHpLOwX"/>
+        <argument type="collection">
+          <argument>IS_AUTHENTICATED_FULLY</argument>
+        </argument>
+        <argument>null</argument>
+      </call>
+      <call method="add">
         <argument type="service" id=".security.request_matcher.TY4kYO2"/>
         <argument type="collection">
           <argument>ROLE_ADMIN</argument>
@@ -5203,6 +5210,9 @@
     </service>
     <service id=".security.request_matcher.O7Tsk.w" class="Symfony\Component\HttpFoundation\RequestMatcher" public="false">
       <argument>^/register</argument>
+    </service>
+    <service id=".security.request_matcher.bHpLOwX" class="Symfony\Component\HttpFoundation\RequestMatcher" public="false">
+      <argument>^/account</argument>
     </service>
     <service id=".security.request_matcher.TY4kYO2" class="Symfony\Component\HttpFoundation\RequestMatcher" public="false">
       <argument>^/*pins</argument>

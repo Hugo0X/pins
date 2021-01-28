@@ -46,7 +46,10 @@ security:
 
     access_control:
         - { path: '^/login', roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
-        - { path: '^/register', roles: [IS_AUTHENTICATED_ANONYMOUSLY] } #put the both on one row
+        - { path: '^/register', roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: '^/account', roles: [IS_AUTHENTICATED_FULLY] }
         - { path: '^/*pins', roles: ROLE_ADMIN }
         - { path: '^/*home', roles: ROLE_USER }
         - { path: '^/*', roles: [ROLE_ADMIN, ROLE_USER] }
+        
+

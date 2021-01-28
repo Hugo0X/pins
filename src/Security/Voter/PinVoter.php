@@ -24,7 +24,7 @@ class PinVoter extends Voter
         // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
             case 'PIN_MANAGE':
-                return $user->isVerified() && $user == $subject->getUser();
+                return $user->isVerified() && $user == $subject->getUser(); // isVerified is useless exepect if you want customize the error message.
         }
 
         return false;
