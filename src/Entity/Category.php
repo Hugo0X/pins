@@ -27,6 +27,11 @@ class Category
      */
     private $description;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $pictureName;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -52,6 +57,18 @@ class Category
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getPictureName(): ?string
+    {
+        return $this->pictureName;
+    }
+
+    public function setPictureName(string $pictureName): self
+    {
+        $this->pictureName = $pictureName;
 
         return $this;
     }

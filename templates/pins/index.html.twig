@@ -6,7 +6,7 @@
     {% if pins|length > 0  %}
     
         <h1 class="mb-4 text-center text-muted">{{ pluralize (pins|length, 'Pin')}}</h1>
-            
+ 
             {% for row in pins|batch(3) %}
                 <div class="row">
                     {% for pin in row %}
@@ -14,7 +14,7 @@
                             <article class="my-2 pin bg-white rounded shadow">
                                 <div class ="mw-100 overflow-hidden rounded-top">
                                     <a href="{{ path('app_pins_show', {id: pin.id}) }}">
-                                        <img src="{{ (pin.imageName ? vich_uploader_asset(pin) : asset('build/images/defaultPicture.png')) | imagine_filter('squared_thumbnail_medium') }}" alt="{{ pin.title }}"  class="w-100"/>
+                                        <img src="{{ (pin.imageName ? vich_uploader_asset(pin) : asset('build/images/' ~ pin.category.pictureName )) | imagine_filter('squared_thumbnail_medium') }}" alt="{{ pin.title }}"  class="w-100"/>
                                     </a>
                                 </div>                                
                                 <h2 class="h5 pl-3 pt-3"><a class="text-secondary text-decoration-none" href="{{ path('app_pins_show', {id: pin.id}) }}">{{ pin.title | u.truncate(50, '...') }}</a></h2>
