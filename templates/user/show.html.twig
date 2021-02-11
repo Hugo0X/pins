@@ -1,0 +1,58 @@
+{% extends 'layouts/base.html.twig' %}
+
+{% block title %}User{% endblock %}
+
+{% block body %}
+
+<div class="col-md-12">
+
+    <h1 class="mt-5 mb-2 text-left text-muted">User #{{ user.id }}</h1>
+    <div class="col-md-12">
+
+    <div class="text-right"><a href="{{ path('app_user')}}" class="text-decoration-none btn btn-secondary">🡠 Back</a></div>
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Email</th>
+                <td>{{ user.email }}</td>
+            </tr>
+            <tr>
+                <th>Roles</th>
+                <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
+            </tr>
+            {# <tr>
+                <th>Password</th>
+                <td>{{ user.password }}</td>
+            </tr> #}
+            <tr>
+                <th>LastName</th>
+                <td>{{ user.LastName }}</td>
+            </tr>
+            <tr>
+                <th>FirstName</th>
+                <td>{{ user.FirstName }}</td>
+            </tr>
+            <tr>
+                <th>Created At</th>
+                <td>{{ user.createdAt|date("d/m/Y H:i:s") }}</td>
+            </tr>
+            <tr>
+                <th>Is Verified?</th>
+                <td>{{ user.isVerified }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <form method="post" action="{{ path('app_user_delete', {'id': user.id}) }}" onsubmit="return confirm('Do you really want delete this user?');">
+        <input type="hidden" name="_method" value="DELETE">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+            <div class="mt-5 btn-group">{#  text-center #}
+                <a href="{{ path('app_user_edit', {'id': user.id}) }}" class="text-decoration-none btn btn-primary btn-lg">Update</a>
+                <button class="btn btn-danger btn-lg">Delete</button>
+            {# {{ include('user/_delete_form.html.twig') }} #}
+            </div>
+    </form>
+    
+    </div>
+</div>
+{% endblock %}

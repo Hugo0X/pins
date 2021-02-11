@@ -16,6 +16,8 @@ return [
         '/account' => [[['_route' => 'app_account', '_controller' => 'App\\Controller\\AccountController::show'], null, ['GET' => 0], null, true, false, null]],
         '/account/edit' => [[['_route' => 'app_account_edit', '_controller' => 'App\\Controller\\AccountController::edit'], null, ['GET' => 0, 'PATCH' => 1], null, false, false, null]],
         '/account/change-password' => [[['_route' => 'app_account_changePassword', '_controller' => 'App\\Controller\\AccountController::changePassword'], null, ['GET' => 0, 'PATCH' => 1], null, false, false, null]],
+        '/category' => [[['_route' => 'app_category', '_controller' => 'App\\Controller\\CategoryController::index'], null, null, null, true, false, null]],
+        '/category/create' => [[['_route' => 'app_category_create', '_controller' => 'App\\Controller\\CategoryController::create'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/' => [[['_route' => 'app_home', '_controller' => 'App\\Controller\\PinsController::index'], null, ['GET' => 0], null, false, false, null]],
         '/pins/create' => [[['_route' => 'app_pins_create', '_controller' => 'App\\Controller\\PinsController::create'], null, ['GET' => 0, 'PUT' => 1], null, false, false, null]],
         '/register' => [[['_route' => 'app_register', '_controller' => 'App\\Controller\\RegistrationController::register'], null, null, null, false, false, null]],
@@ -24,6 +26,7 @@ return [
         '/reset-password/check-email' => [[['_route' => 'app_check_email', '_controller' => 'App\\Controller\\ResetPasswordController::checkEmail'], null, null, null, false, false, null]],
         '/login' => [[['_route' => 'app_login', '_controller' => 'App\\Controller\\SecurityController::login'], null, null, null, false, false, null]],
         '/logout' => [[['_route' => 'app_logout', '_controller' => 'App\\Controller\\SecurityController::logout'], null, ['POST' => 0], null, false, false, null]],
+        '/user' => [[['_route' => 'app_user', '_controller' => 'App\\Controller\\UserController::index'], null, ['GET' => 0], null, true, false, null]],
     ],
     [ // $regexpList
         0 => '{^(?'
@@ -42,15 +45,25 @@ return [
                         .'|(*:159)'
                     .')'
                 .')'
-                .'|/pins/(?'
-                    .'|([0-9]+)(*:186)'
-                    .'|([0-9]+)/edit(*:207)'
-                    .'|([0-9]+)(*:223)'
+                .'|/category/([^/]++)(?'
+                    .'|(*:190)'
+                    .'|/edit(*:203)'
+                    .'|(*:211)'
                 .')'
-                .'|/reset\\-password/reset(?:/([^/]++))?(*:268)'
+                .'|/pins/(?'
+                    .'|([0-9]+)(*:237)'
+                    .'|([0-9]+)/edit(*:258)'
+                    .'|([0-9]+)(*:274)'
+                .')'
+                .'|/reset\\-password/reset(?:/([^/]++))?(*:319)'
+                .'|/user/([^/]++)(?'
+                    .'|(*:344)'
+                    .'|/edit(*:357)'
+                    .'|(*:365)'
+                .')'
                 .'|/media/cache/resolve/(?'
-                    .'|([A-z0-9_-]*)/rc/([^/]++)/(.+)(*:330)'
-                    .'|([A-z0-9_-]*)/(.+)(*:356)'
+                    .'|([A-z0-9_-]*)/rc/([^/]++)/(.+)(*:428)'
+                    .'|([A-z0-9_-]*)/(.+)(*:454)'
                 .')'
             .')/?$}sDu',
     ],
@@ -62,12 +75,18 @@ return [
         136 => [[['_route' => '_profiler_exception', '_controller' => 'web_profiler.controller.exception_panel::body'], ['token'], null, null, false, false, null]],
         149 => [[['_route' => '_profiler_exception_css', '_controller' => 'web_profiler.controller.exception_panel::stylesheet'], ['token'], null, null, false, false, null]],
         159 => [[['_route' => '_profiler', '_controller' => 'web_profiler.controller.profiler::panelAction'], ['token'], null, null, false, true, null]],
-        186 => [[['_route' => 'app_pins_show', '_controller' => 'App\\Controller\\PinsController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        207 => [[['_route' => 'app_pins_edit', '_controller' => 'App\\Controller\\PinsController::edit'], ['id'], ['GET' => 0, 'PUT' => 1], null, false, false, null]],
-        223 => [[['_route' => 'app_pins_delete', '_controller' => 'App\\Controller\\PinsController::delete'], ['id'], ['DELETE' => 0], null, false, true, null]],
-        268 => [[['_route' => 'app_reset_password', 'token' => null, '_controller' => 'App\\Controller\\ResetPasswordController::reset'], ['token'], null, null, false, true, null]],
-        330 => [[['_route' => 'liip_imagine_filter_runtime', '_controller' => 'Liip\\ImagineBundle\\Controller\\ImagineController::filterRuntimeAction'], ['filter', 'hash', 'path'], ['GET' => 0], null, false, true, null]],
-        356 => [
+        190 => [[['_route' => 'app_category_show', '_controller' => 'App\\Controller\\CategoryController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        203 => [[['_route' => 'app_category_edit', '_controller' => 'App\\Controller\\CategoryController::edit'], ['id'], ['GET' => 0, 'PUT' => 1], null, false, false, null]],
+        211 => [[['_route' => 'app_category_delete', '_controller' => 'App\\Controller\\CategoryController::delete'], ['id'], ['DELETE' => 0], null, false, true, null]],
+        237 => [[['_route' => 'app_pins_show', '_controller' => 'App\\Controller\\PinsController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        258 => [[['_route' => 'app_pins_edit', '_controller' => 'App\\Controller\\PinsController::edit'], ['id'], ['GET' => 0, 'PUT' => 1], null, false, false, null]],
+        274 => [[['_route' => 'app_pins_delete', '_controller' => 'App\\Controller\\PinsController::delete'], ['id'], ['DELETE' => 0], null, false, true, null]],
+        319 => [[['_route' => 'app_reset_password', 'token' => null, '_controller' => 'App\\Controller\\ResetPasswordController::reset'], ['token'], null, null, false, true, null]],
+        344 => [[['_route' => 'app_user_show', '_controller' => 'App\\Controller\\UserController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        357 => [[['_route' => 'app_user_edit', '_controller' => 'App\\Controller\\UserController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        365 => [[['_route' => 'app_user_delete', '_controller' => 'App\\Controller\\UserController::delete'], ['id'], ['DELETE' => 0], null, false, true, null]],
+        428 => [[['_route' => 'liip_imagine_filter_runtime', '_controller' => 'Liip\\ImagineBundle\\Controller\\ImagineController::filterRuntimeAction'], ['filter', 'hash', 'path'], ['GET' => 0], null, false, true, null]],
+        454 => [
             [['_route' => 'liip_imagine_filter', '_controller' => 'Liip\\ImagineBundle\\Controller\\ImagineController::filterAction'], ['filter', 'path'], ['GET' => 0], null, false, true, null],
             [null, null, null, null, false, false, 0],
         ],

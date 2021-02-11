@@ -37,7 +37,7 @@
         <parameter key="namespace">Symfony\Bundle\TwigBundle</parameter>
       </parameter>
       <parameter key="TwigExtraBundle" type="collection">
-        <parameter key="path">C:\wamp64\www\pins\vendor\twig\extra-bundle\src</parameter>
+        <parameter key="path">C:\wamp64\www\pins\vendor\twig\extra-bundle</parameter>
         <parameter key="namespace">Twig\Extra\TwigExtraBundle</parameter>
       </parameter>
       <parameter key="SensioFrameworkExtraBundle" type="collection">
@@ -285,7 +285,6 @@
     <parameter key="env(VAR_DUMPER_SERVER)">127.0.0.1:9912</parameter>
     <parameter key="time.datetime_formatter.class">Knp\Bundle\TimeBundle\DateTimeFormatter</parameter>
     <parameter key="time.twig.extension.time.class">Knp\Bundle\TimeBundle\Twig\Extension\TimeExtension</parameter>
-    <parameter key="time.templating.helper.time.class">Knp\Bundle\TimeBundle\Templating\Helper\TimeHelper</parameter>
     <parameter key="vich_uploader.default_filename_attribute_suffix">_name</parameter>
     <parameter key="vich_uploader.mappings" type="collection">
       <parameter key="pin_image" type="collection">
@@ -293,6 +292,22 @@
         <parameter key="upload_destination">C:\wamp64\www\pins/public/uploads/pins</parameter>
         <parameter key="namer" type="collection">
           <parameter key="service">Vich\UploaderBundle\Naming\SmartUniqueNamer.pin_image</parameter>
+          <parameter key="options" type="collection"/>
+        </parameter>
+        <parameter key="directory_namer" type="collection">
+          <parameter key="service">null</parameter>
+          <parameter key="options">null</parameter>
+        </parameter>
+        <parameter key="delete_on_remove">true</parameter>
+        <parameter key="delete_on_update">true</parameter>
+        <parameter key="inject_on_load">false</parameter>
+        <parameter key="db_driver">orm</parameter>
+      </parameter>
+      <parameter key="category_image" type="collection">
+        <parameter key="uri_prefix">/uploads/categories</parameter>
+        <parameter key="upload_destination">C:\wamp64\www\pins/public/uploads/categories</parameter>
+        <parameter key="namer" type="collection">
+          <parameter key="service">Vich\UploaderBundle\Naming\SmartUniqueNamer.category_image</parameter>
           <parameter key="options" type="collection"/>
         </parameter>
         <parameter key="directory_namer" type="collection">
@@ -393,6 +408,13 @@
     <parameter key="liip_imagine.binary.loader.default">default</parameter>
     <parameter key="liip_imagine.controller.filter_action">Liip\ImagineBundle\Controller\ImagineController::filterAction</parameter>
     <parameter key="liip_imagine.controller.filter_runtime_action">Liip\ImagineBundle\Controller\ImagineController::filterRuntimeAction</parameter>
+    <parameter key="liip_imagine.webp.generate">false</parameter>
+    <parameter key="liip_imagine.webp.options" type="collection">
+      <parameter key="quality">100</parameter>
+      <parameter key="cache">null</parameter>
+      <parameter key="data_loader">null</parameter>
+      <parameter key="post_processors" type="collection"/>
+    </parameter>
     <parameter key="knp_paginator.template.pagination">@KnpPaginator/Pagination/twitter_bootstrap_v4_pagination.html.twig</parameter>
     <parameter key="knp_paginator.template.filtration">@KnpPaginator/Pagination/filtration.html.twig</parameter>
     <parameter key="knp_paginator.template.sortable">@KnpPaginator/Pagination/sortable_link.html.twig</parameter>
@@ -495,6 +517,13 @@
         <argument type="service" id=".service_locator.g9CqTPp.App\Controller\AccountController"/>
       </call>
     </service>
+    <service id="App\Controller\CategoryController" class="App\Controller\CategoryController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.g9CqTPp.App\Controller\CategoryController"/>
+      </call>
+    </service>
     <service id="App\Controller\PinsController" class="App\Controller\PinsController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
@@ -526,9 +555,19 @@
         <argument type="service" id=".service_locator.g9CqTPp.App\Controller\SecurityController"/>
       </call>
     </service>
+    <service id="App\Controller\UserController" class="App\Controller\UserController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.g9CqTPp.App\Controller\UserController"/>
+      </call>
+    </service>
     <service id="App\EventSubscriber\LougoutEventSubscriber" class="App\EventSubscriber\LougoutEventSubscriber" autowire="true" autoconfigure="true">
       <tag name="kernel.event_subscriber"/>
       <argument type="service" id="router.default"/>
+    </service>
+    <service id="App\Form\CategoryType" class="App\Form\CategoryType" autowire="true" autoconfigure="true">
+      <tag name="form.type"/>
     </service>
     <service id="App\Form\ChangePasswordFormType" class="App\Form\ChangePasswordFormType" autowire="true" autoconfigure="true">
       <tag name="form.type"/>
@@ -543,6 +582,9 @@
       <tag name="form.type"/>
     </service>
     <service id="App\Form\UserFormType" class="App\Form\UserFormType" autowire="true" autoconfigure="true">
+      <tag name="form.type"/>
+    </service>
+    <service id="App\Form\UserType" class="App\Form\UserType" autowire="true" autoconfigure="true">
       <tag name="form.type"/>
     </service>
     <service id="App\Repository\CategoryRepository" class="App\Repository\CategoryRepository" autowire="true" autoconfigure="true">
@@ -1036,11 +1078,13 @@
         <argument>Liip\ImagineBundle\Form\Type</argument>
       </argument>
       <argument type="collection">
+        <argument>App\Form\CategoryType</argument>
         <argument>App\Form\ChangePasswordFormType</argument>
         <argument>App\Form\PinType</argument>
         <argument>App\Form\RegistrationFormType</argument>
         <argument>App\Form\ResetPasswordRequestFormType</argument>
         <argument>App\Form\UserFormType</argument>
+        <argument>App\Form\UserType</argument>
         <argument>Symfony\Component\Form\Extension\Core\Type\FormType</argument>
         <argument>Symfony\Component\Form\Extension\Core\Type\ChoiceType</argument>
         <argument>Symfony\Component\Form\Extension\Core\Type\FileType</argument>
@@ -1387,7 +1431,7 @@
       <argument type="service" id="form.registry"/>
     </service>
     <service id="form.extension" class="Symfony\Component\Form\Extension\DependencyInjection\DependencyInjectionExtension" public="false">
-      <argument type="service" id=".service_locator.FvhGwJM"/>
+      <argument type="service" id=".service_locator.Yhnb1di"/>
       <argument type="collection">
         <argument key="Symfony\Component\Form\Extension\Core\Type\FormType" type="iterator">
           <argument type="service" id="form.type_extension.form.transformation_failure_handling"/>
@@ -1779,361 +1823,381 @@
         <argument key="cache_dir">C:\wamp64\www\pins\var\cache\dev/translations</argument>
         <argument key="debug">true</argument>
         <argument key="resource_files" type="collection">
-          <argument key="af" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.af.xlf</argument>
-          </argument>
-          <argument key="ar" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.ar.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.ar.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.ar.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.ar.xliff</argument>
-            <argument>C:\wamp64\www\pins\vendor\vich\uploader-bundle/translations\messages.ar.yaml</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.ar.xliff</argument>
-          </argument>
-          <argument key="az" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.az.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.az.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.az.xlf</argument>
-          </argument>
-          <argument key="be" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.be.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.be.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.be.xlf</argument>
-          </argument>
-          <argument key="bg" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.bg.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.bg.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.bg.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.bg.xliff</argument>
-            <argument>C:\wamp64\www\pins\vendor\vich\uploader-bundle/translations\messages.bg.yaml</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.bg.xliff</argument>
-          </argument>
-          <argument key="bs" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.bs.xlf</argument>
-          </argument>
-          <argument key="ca" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.ca.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.ca.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.ca.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.ca.xliff</argument>
-            <argument>C:\wamp64\www\pins\vendor\vich\uploader-bundle/translations\messages.ca.yaml</argument>
-          </argument>
-          <argument key="cs" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.cs.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.cs.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.cs.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.cs.xliff</argument>
-            <argument>C:\wamp64\www\pins\vendor\vich\uploader-bundle/translations\messages.cs.yaml</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.cs.xliff</argument>
-          </argument>
-          <argument key="cy" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.cy.xlf</argument>
-          </argument>
-          <argument key="da" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.da.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.da.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.da.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.da.xliff</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.da.xliff</argument>
-          </argument>
-          <argument key="de" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.de.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.de.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.de.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.de.xliff</argument>
-            <argument>C:\wamp64\www\pins\vendor\vich\uploader-bundle/translations\messages.de.yaml</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.de.xliff</argument>
-          </argument>
-          <argument key="el" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.el.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.el.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.el.xlf</argument>
-          </argument>
           <argument key="en" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.en.xlf</argument>
+            <argument>C:\wamp64\www\pins/translations\security.en.yaml</argument>
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.en.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.en.xliff</argument>
             <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.en.xlf</argument>
             <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.en.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.en.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.en.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfonycasts\reset-password-bundle\src/Resources/translations\ResetPasswordBundle.en.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.en.xlf</argument>
             <argument>C:\wamp64\www\pins\vendor\vich\uploader-bundle/translations\messages.en.yaml</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.en.xliff</argument>
-            <argument>C:\wamp64\www\pins/translations\security.en.yaml</argument>
+          </argument>
+          <argument key="ar" type="collection">
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.ar.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.ar.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.ar.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.ar.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.ar.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\vich\uploader-bundle/translations\messages.ar.yaml</argument>
+          </argument>
+          <argument key="bg" type="collection">
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.bg.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.bg.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.bg.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.bg.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.bg.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\vich\uploader-bundle/translations\messages.bg.yaml</argument>
+          </argument>
+          <argument key="cs" type="collection">
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.cs.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.cs.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.cs.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.cs.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.cs.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\vich\uploader-bundle/translations\messages.cs.yaml</argument>
+          </argument>
+          <argument key="da" type="collection">
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.da.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.da.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.da.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.da.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.da.xlf</argument>
+          </argument>
+          <argument key="de" type="collection">
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.de.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.de.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.de.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.de.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.de.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.de.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\vich\uploader-bundle/translations\messages.de.yaml</argument>
           </argument>
           <argument key="es" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.es.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.es.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.es.xliff</argument>
             <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.es.xlf</argument>
             <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.es.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.es.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.es.xlf</argument>
             <argument>C:\wamp64\www\pins\vendor\vich\uploader-bundle/translations\messages.es.yaml</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.es.xliff</argument>
-          </argument>
-          <argument key="et" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.et.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.et.xlf</argument>
           </argument>
           <argument key="eu" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.eu.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.eu.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.eu.xliff</argument>
             <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.eu.xlf</argument>
             <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.eu.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.eu.xliff</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.eu.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.eu.xlf</argument>
           </argument>
           <argument key="fa" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.fa.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.fa.xliff</argument>
             <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.fa.xlf</argument>
             <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.fa.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.fa.xliff</argument>
-          </argument>
-          <argument key="fi" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.fi.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.fi.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.fi.xliff</argument>
-            <argument>C:\wamp64\www\pins\vendor\vich\uploader-bundle/translations\messages.fi.yaml</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.fa.xlf</argument>
           </argument>
           <argument key="fr" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.fr.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.fr.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.fr.xliff</argument>
             <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.fr.xlf</argument>
             <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.fr.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.fr.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.fr.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.fr.xlf</argument>
             <argument>C:\wamp64\www\pins\vendor\vich\uploader-bundle/translations\messages.fr.yaml</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.fr.xliff</argument>
-          </argument>
-          <argument key="gl" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.gl.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.gl.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.gl.xlf</argument>
-          </argument>
-          <argument key="he" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.he.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.he.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.he.xlf</argument>
-          </argument>
-          <argument key="hr" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.hr.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.hr.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.hr.xlf</argument>
           </argument>
           <argument key="hu" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.hu.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.hu.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.hu.xliff</argument>
             <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.hu.xlf</argument>
             <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.hu.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.hu.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.hu.xlf</argument>
             <argument>C:\wamp64\www\pins\vendor\vich\uploader-bundle/translations\messages.hu.yaml</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.hu.xliff</argument>
-          </argument>
-          <argument key="hy" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.hy.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.hy.xlf</argument>
           </argument>
           <argument key="id" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.id.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.id.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.id.xliff</argument>
             <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.id.xlf</argument>
             <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.id.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.id.xliff</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.id.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.id.xlf</argument>
           </argument>
           <argument key="it" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.it.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.it.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.it.xliff</argument>
             <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.it.xlf</argument>
             <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.it.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.it.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.it.xlf</argument>
             <argument>C:\wamp64\www\pins\vendor\vich\uploader-bundle/translations\messages.it.yaml</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.it.xliff</argument>
           </argument>
           <argument key="ja" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.ja.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.ja.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.ja.xliff</argument>
             <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.ja.xlf</argument>
             <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.ja.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.ja.xliff</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.ja.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.ja.xlf</argument>
           </argument>
-          <argument key="lb" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.lb.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.lb.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.lb.xlf</argument>
+          <argument key="ky" type="collection">
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.ky.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.ky.xliff</argument>
           </argument>
           <argument key="lt" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.lt.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.lt.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.lt.xliff</argument>
             <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.lt.xlf</argument>
             <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.lt.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.lt.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.lt.xlf</argument>
             <argument>C:\wamp64\www\pins\vendor\vich\uploader-bundle/translations\messages.lt.yaml</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.lt.xliff</argument>
-          </argument>
-          <argument key="lv" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.lv.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.lv.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.lv.xlf</argument>
-          </argument>
-          <argument key="mn" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.mn.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.mn.xlf</argument>
-          </argument>
-          <argument key="nb" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.nb.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.nb.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.nb.xlf</argument>
           </argument>
           <argument key="nl" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.nl.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.nl.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.nl.xliff</argument>
             <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.nl.xlf</argument>
             <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.nl.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.nl.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.nl.xlf</argument>
             <argument>C:\wamp64\www\pins\vendor\vich\uploader-bundle/translations\messages.nl.yaml</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.nl.xliff</argument>
-          </argument>
-          <argument key="nn" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.nn.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.nn.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.nn.xlf</argument>
           </argument>
           <argument key="no" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.no.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.no.xliff</argument>
             <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.no.xlf</argument>
             <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.no.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.no.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.no.xlf</argument>
           </argument>
           <argument key="pl" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.pl.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.pl.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.pl.xliff</argument>
             <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.pl.xlf</argument>
             <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.pl.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.pl.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.pl.xlf</argument>
             <argument>C:\wamp64\www\pins\vendor\vich\uploader-bundle/translations\messages.pl.yaml</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.pl.xliff</argument>
-          </argument>
-          <argument key="pt" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.pt.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.pt.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.pt.xliff</argument>
-            <argument>C:\wamp64\www\pins\vendor\vich\uploader-bundle/translations\messages.pt.yaml</argument>
           </argument>
           <argument key="pt_BR" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.pt_BR.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.pt_BR.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.pt_BR.xliff</argument>
             <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.pt_BR.xlf</argument>
             <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.pt_BR.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.pt_BR.xliff</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.pt_BR.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.pt_BR.xlf</argument>
           </argument>
           <argument key="ro" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.ro.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.ro.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.ro.xliff</argument>
             <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.ro.xlf</argument>
             <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.ro.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.ro.xliff</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.ro.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.ro.xlf</argument>
           </argument>
           <argument key="ru" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.ru.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.ru.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.ru.xliff</argument>
             <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.ru.xlf</argument>
             <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.ru.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.ru.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.ru.xlf</argument>
             <argument>C:\wamp64\www\pins\vendor\vich\uploader-bundle/translations\messages.ru.yaml</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.ru.xliff</argument>
-          </argument>
-          <argument key="sk" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.sk.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.sk.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.sk.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.sk.xliff</argument>
-          </argument>
-          <argument key="sl" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.sl.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.sl.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.sl.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.sl.xliff</argument>
-            <argument>C:\wamp64\www\pins\vendor\vich\uploader-bundle/translations\messages.sl.yaml</argument>
-          </argument>
-          <argument key="sq" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.sq.xlf</argument>
-          </argument>
-          <argument key="sr_Cyrl" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.sr_Cyrl.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.sr_Cyrl.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.sr_Cyrl.xlf</argument>
-          </argument>
-          <argument key="sr_Latn" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.sr_Latn.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.sr_Latn.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.sr_Latn.xlf</argument>
           </argument>
           <argument key="sv" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.sv.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.sv.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.sv.xliff</argument>
             <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.sv.xlf</argument>
             <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.sv.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.sv.xliff</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.sv.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.sv.xlf</argument>
           </argument>
-          <argument key="th" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.th.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.th.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.th.xliff</argument>
-          </argument>
-          <argument key="tl" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.tl.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.tl.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.tl.xlf</argument>
+          <argument key="sw" type="collection">
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.sw.xliff</argument>
           </argument>
           <argument key="tr" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.tr.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.tr.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.tr.xliff</argument>
             <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.tr.xlf</argument>
             <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.tr.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.tr.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.tr.xlf</argument>
             <argument>C:\wamp64\www\pins\vendor\vich\uploader-bundle/translations\messages.tr.yaml</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.tr.xliff</argument>
           </argument>
           <argument key="uk" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.uk.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.uk.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.uk.xliff</argument>
             <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.uk.xlf</argument>
             <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.uk.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.uk.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.uk.xlf</argument>
             <argument>C:\wamp64\www\pins\vendor\vich\uploader-bundle/translations\messages.uk.yaml</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.uk.xliff</argument>
-          </argument>
-          <argument key="vi" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.vi.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.vi.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.vi.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.vi.xliff</argument>
-          </argument>
-          <argument key="zh_CN" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.zh_CN.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.zh_CN.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.zh_CN.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.zh_CN.xliff</argument>
-          </argument>
-          <argument key="zh_TW" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.zh_TW.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.zh_TW.xliff</argument>
-          </argument>
-          <argument key="pt_PT" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.pt_PT.xlf</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.pt_PT.xliff</argument>
           </argument>
           <argument key="bs_Latn_BA" type="collection">
             <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.bs_Latn_BA.xliff</argument>
           </argument>
+          <argument key="ca" type="collection">
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.ca.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.ca.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.ca.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.ca.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\vich\uploader-bundle/translations\messages.ca.yaml</argument>
+          </argument>
           <argument key="eo" type="collection">
             <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.eo.xliff</argument>
+          </argument>
+          <argument key="fi" type="collection">
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.fi.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.fi.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.fi.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.fi.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\vich\uploader-bundle/translations\messages.fi.yaml</argument>
           </argument>
           <argument key="hr_HR" type="collection">
             <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.hr_HR.xliff</argument>
           </argument>
-          <argument key="ky" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.ky.xliff</argument>
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.ky.xliff</argument>
+          <argument key="nb" type="collection">
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.nb.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.nb.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.nb.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.nb.xlf</argument>
+          </argument>
+          <argument key="nn" type="collection">
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.nn.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.nn.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.nn.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.nn.xlf</argument>
+          </argument>
+          <argument key="pt" type="collection">
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.pt.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.pt.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.pt.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.pt.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\vich\uploader-bundle/translations\messages.pt.yaml</argument>
+          </argument>
+          <argument key="pt_PT" type="collection">
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.pt_PT.xliff</argument>
+          </argument>
+          <argument key="sk" type="collection">
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.sk.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.sk.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.sk.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.sk.xlf</argument>
+          </argument>
+          <argument key="sl" type="collection">
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.sl.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.sl.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.sl.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.sl.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\vich\uploader-bundle/translations\messages.sl.yaml</argument>
           </argument>
           <argument key="sr_Latin" type="collection">
             <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.sr_Latin.xliff</argument>
           </argument>
+          <argument key="th" type="collection">
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.th.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.th.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.th.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.th.xlf</argument>
+          </argument>
+          <argument key="vi" type="collection">
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.vi.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.vi.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.vi.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.vi.xlf</argument>
+          </argument>
           <argument key="zh" type="collection">
             <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.zh.xliff</argument>
+          </argument>
+          <argument key="zh_CN" type="collection">
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.zh_CN.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.zh_CN.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.zh_CN.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.zh_CN.xlf</argument>
           </argument>
           <argument key="zh_HK" type="collection">
             <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.zh_HK.xliff</argument>
           </argument>
+          <argument key="zh_TW" type="collection">
+            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations\time.zh_TW.xliff</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.zh_TW.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.zh_TW.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.zh_TW.xlf</argument>
+          </argument>
+          <argument key="af" type="collection">
+            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.af.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.af.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.af.xlf</argument>
+          </argument>
+          <argument key="az" type="collection">
+            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.az.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.az.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.az.xlf</argument>
+          </argument>
+          <argument key="be" type="collection">
+            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.be.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.be.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.be.xlf</argument>
+          </argument>
+          <argument key="bs" type="collection">
+            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.bs.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.bs.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.bs.xlf</argument>
+          </argument>
+          <argument key="el" type="collection">
+            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.el.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.el.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.el.xlf</argument>
+          </argument>
+          <argument key="et" type="collection">
+            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.et.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.et.xlf</argument>
+          </argument>
+          <argument key="gl" type="collection">
+            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.gl.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.gl.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.gl.xlf</argument>
+          </argument>
+          <argument key="he" type="collection">
+            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.he.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.he.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.he.xlf</argument>
+          </argument>
+          <argument key="hr" type="collection">
+            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.hr.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.hr.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.hr.xlf</argument>
+          </argument>
+          <argument key="hy" type="collection">
+            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.hy.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.hy.xlf</argument>
+          </argument>
+          <argument key="lb" type="collection">
+            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.lb.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.lb.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.lb.xlf</argument>
+          </argument>
+          <argument key="lv" type="collection">
+            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.lv.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.lv.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.lv.xlf</argument>
+          </argument>
+          <argument key="mn" type="collection">
+            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.mn.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.mn.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.mn.xlf</argument>
+          </argument>
+          <argument key="sq" type="collection">
+            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.sq.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.sq.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.sq.xlf</argument>
+          </argument>
+          <argument key="sr_Cyrl" type="collection">
+            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.sr_Cyrl.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.sr_Cyrl.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.sr_Cyrl.xlf</argument>
+          </argument>
+          <argument key="sr_Latn" type="collection">
+            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.sr_Latn.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.sr_Latn.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.sr_Latn.xlf</argument>
+          </argument>
+          <argument key="tl" type="collection">
+            <argument>C:\wamp64\www\pins\vendor\symfony\form/Resources/translations\validators.tl.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations\security.tl.xlf</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.tl.xlf</argument>
+          </argument>
+          <argument key="cy" type="collection">
+            <argument>C:\wamp64\www\pins\vendor\symfony\validator/Resources/translations\validators.cy.xlf</argument>
+          </argument>
+          <argument key="sr" type="collection">
+            <argument>C:\wamp64\www\pins\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.sr.xlf</argument>
+          </argument>
           <argument key="vn" type="collection">
             <argument>C:\wamp64\www\pins\vendor\vich\uploader-bundle/translations\messages.vn.yaml</argument>
-          </argument>
-          <argument key="sw" type="collection">
-            <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.sw.xliff</argument>
           </argument>
         </argument>
         <argument key="scanned_directories" type="collection">
@@ -2142,11 +2206,13 @@
           <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations</argument>
           <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations</argument>
           <argument>C:\wamp64\www\pins\vendor\vich\uploader-bundle/translations</argument>
+          <argument>C:\wamp64\www\pins\vendor\symfonycasts\verify-email-bundle\src/Resources/translations</argument>
+          <argument>C:\wamp64\www\pins\vendor\symfonycasts\reset-password-bundle\src/Resources/translations</argument>
           <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations</argument>
           <argument>C:\wamp64\www\pins/translations</argument>
           <argument>C:\wamp64\www\pins\vendor\symfony\framework-bundle/translations</argument>
           <argument>C:\wamp64\www\pins\vendor\symfony\twig-bundle/translations</argument>
-          <argument>C:\wamp64\www\pins\vendor\twig\extra-bundle\src/translations</argument>
+          <argument>C:\wamp64\www\pins\vendor\twig\extra-bundle/translations</argument>
           <argument>C:\wamp64\www\pins\vendor\sensio\framework-extra-bundle\src/translations</argument>
           <argument>C:\wamp64\www\pins\vendor\doctrine\doctrine-bundle/translations</argument>
           <argument>C:\wamp64\www\pins\vendor\doctrine\doctrine-migrations-bundle/translations</argument>
@@ -2158,8 +2224,6 @@
           <argument>C:\wamp64\www\pins\vendor\theofidry\psysh-bundle\src/translations</argument>
           <argument>C:\wamp64\www\pins\vendor\symfony\webpack-encore-bundle\src/translations</argument>
           <argument>C:\wamp64\www\pins\vendor\liip\imagine-bundle/translations</argument>
-          <argument>C:\wamp64\www\pins\vendor\symfonycasts\verify-email-bundle\src/translations</argument>
-          <argument>C:\wamp64\www\pins\vendor\symfonycasts\reset-password-bundle\src/translations</argument>
         </argument>
         <argument key="cache_vary" type="collection">
           <argument key="scanned_directories" type="collection">
@@ -2168,11 +2232,13 @@
             <argument>C:\wamp64\www\pins\vendor\symfony\security-core/Resources/translations</argument>
             <argument>C:\wamp64\www\pins\vendor\knplabs\knp-time-bundle/Resources/translations</argument>
             <argument>C:\wamp64\www\pins\vendor\vich\uploader-bundle/translations</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfonycasts\verify-email-bundle\src/Resources/translations</argument>
+            <argument>C:\wamp64\www\pins\vendor\symfonycasts\reset-password-bundle\src/Resources/translations</argument>
             <argument>C:\wamp64\www\pins\vendor\knplabs\knp-paginator-bundle/translations</argument>
             <argument>translations</argument>
             <argument>C:\wamp64\www\pins\vendor\symfony\framework-bundle/translations</argument>
             <argument>C:\wamp64\www\pins\vendor\symfony\twig-bundle/translations</argument>
-            <argument>C:\wamp64\www\pins\vendor\twig\extra-bundle\src/translations</argument>
+            <argument>C:\wamp64\www\pins\vendor\twig\extra-bundle/translations</argument>
             <argument>C:\wamp64\www\pins\vendor\sensio\framework-extra-bundle\src/translations</argument>
             <argument>C:\wamp64\www\pins\vendor\doctrine\doctrine-bundle/translations</argument>
             <argument>C:\wamp64\www\pins\vendor\doctrine\doctrine-migrations-bundle/translations</argument>
@@ -2184,8 +2250,6 @@
             <argument>C:\wamp64\www\pins\vendor\theofidry\psysh-bundle\src/translations</argument>
             <argument>C:\wamp64\www\pins\vendor\symfony\webpack-encore-bundle\src/translations</argument>
             <argument>C:\wamp64\www\pins\vendor\liip\imagine-bundle/translations</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfonycasts\verify-email-bundle\src/translations</argument>
-            <argument>C:\wamp64\www\pins\vendor\symfonycasts\reset-password-bundle\src/translations</argument>
           </argument>
         </argument>
       </argument>
@@ -3609,6 +3673,9 @@
         <argument type="service" id="webpack_encore.twig_entry_files_extension"/>
       </call>
       <call method="addExtension">
+        <argument type="service" id="webpack_encore.twig_stimulus_extension"/>
+      </call>
+      <call method="addExtension">
         <argument type="service" id="Vich\UploaderBundle\Twig\Extension\UploaderExtension"/>
       </call>
       <call method="addExtension">
@@ -3634,6 +3701,12 @@
         <argument type="collection">
           <argument type="service" id="twig.missing_extension_suggestor"/>
           <argument>suggestFunction</argument>
+        </argument>
+      </call>
+      <call method="registerUndefinedTokenParserCallback">
+        <argument type="collection">
+          <argument type="service" id="twig.missing_extension_suggestor"/>
+          <argument>suggestTag</argument>
         </argument>
       </call>
       <configurator service="twig.configurator.environment" method="configure"/>
@@ -3866,8 +3939,8 @@
     <service id="twig.mime_body_renderer" class="Symfony\Bridge\Twig\Mime\BodyRenderer">
       <argument type="service" id="twig"/>
     </service>
-    <service id="twig.missing_extension_suggestor" class="Twig\Extra\TwigExtraBundle\MissingExtensionSuggestor" public="false"/>
-    <service id="twig.extension.string" class="Twig\Extra\String\StringExtension" public="false">
+    <service id="twig.missing_extension_suggestor" class="Twig\Extra\TwigExtraBundle\MissingExtensionSuggestor"/>
+    <service id="twig.extension.string" class="Twig\Extra\String\StringExtension">
       <tag name="twig.extension"/>
     </service>
     <service id="sensio_framework_extra.controller.listener" class="Sensio\Bundle\FrameworkExtraBundle\EventListener\ControllerListener">
@@ -3940,10 +4013,11 @@
     <service id="framework_extra_bundle.argument_name_convertor" class="Sensio\Bundle\FrameworkExtraBundle\Request\ArgumentNameConverter">
       <argument type="service" id="argument_metadata_factory"/>
     </service>
-    <service id="doctrine.dbal.logger.chain" class="Doctrine\DBAL\Logging\LoggerChain" public="false" abstract="true">
-      <call method="addLogger">
+    <service id="doctrine.dbal.logger.chain" class="Doctrine\DBAL\Logging\LoggerChain">
+      <argument type="collection">
         <argument type="service" id="doctrine.dbal.logger"/>
-      </call>
+        <argument type="service" id="doctrine.dbal.logger.profiling.default"/>
+      </argument>
     </service>
     <service id="doctrine.dbal.logger.profiling" class="Doctrine\DBAL\Logging\DebugStack" public="false" abstract="true"/>
     <service id="doctrine.dbal.logger.backtrace" class="Doctrine\Bundle\DoctrineBundle\Dbal\Logging\BacktraceLogger" public="false" abstract="true"/>
@@ -4002,18 +4076,27 @@
         <argument>doctrine:database:drop</argument>
       </call>
     </service>
+    <service id="doctrine.query_sql_command" class="Doctrine\Bundle\DoctrineBundle\Command\Proxy\RunSqlDoctrineCommand">
+      <tag name="console.command" command="doctrine:query:sql"/>
+      <tag name="container.no_preload"/>
+      <argument type="service" id="Doctrine\Bundle\DoctrineBundle\Dbal\ManagerRegistryAwareConnectionProvider" on-invalid="null"/>
+      <call method="setName">
+        <argument>doctrine:query:sql</argument>
+      </call>
+    </service>
+    <service id="Doctrine\DBAL\Tools\Console\Command\RunSqlCommand" class="Doctrine\DBAL\Tools\Console\Command\RunSqlCommand">
+      <tag name="console.command" command="dbal:run-sql"/>
+      <tag name="container.no_preload"/>
+      <argument type="service" id="Doctrine\Bundle\DoctrineBundle\Dbal\ManagerRegistryAwareConnectionProvider" on-invalid="null"/>
+      <call method="setName">
+        <argument>dbal:run-sql</argument>
+      </call>
+    </service>
     <service id="doctrine.database_import_command" class="Doctrine\Bundle\DoctrineBundle\Command\Proxy\ImportDoctrineCommand">
       <tag name="console.command" command="doctrine:database:import"/>
       <tag name="container.no_preload"/>
       <call method="setName">
         <argument>doctrine:database:import</argument>
-      </call>
-    </service>
-    <service id="doctrine.query_sql_command" class="Doctrine\Bundle\DoctrineBundle\Command\Proxy\RunSqlDoctrineCommand">
-      <tag name="console.command" command="doctrine:query:sql"/>
-      <tag name="container.no_preload"/>
-      <call method="setName">
-        <argument>doctrine:query:sql</argument>
       </call>
     </service>
     <service id="doctrine.dbal.default_connection.configuration" class="Doctrine\DBAL\Configuration" public="false">
@@ -4022,28 +4105,23 @@
       </call>
     </service>
     <service id="doctrine.dbal.logger.profiling.default" class="Doctrine\DBAL\Logging\DebugStack" public="false"/>
-    <service id="doctrine.dbal.logger.chain.default" class="Doctrine\DBAL\Logging\LoggerChain" public="false">
-      <call method="addLogger">
+    <service id="doctrine.dbal.logger.chain.default" class="Doctrine\DBAL\Logging\LoggerChain">
+      <argument type="collection">
         <argument type="service" id="doctrine.dbal.logger"/>
-      </call>
-      <call method="addLogger">
         <argument type="service" id="doctrine.dbal.logger.profiling.default"/>
-      </call>
+      </argument>
     </service>
     <service id="doctrine.dbal.default_connection.event_manager" class="Symfony\Bridge\Doctrine\ContainerAwareEventManager" public="false">
-      <argument type="service" id=".service_locator.xxFfgCP"/>
-      <call method="addEventSubscriber">
-        <argument type="service" id="vich_uploader.listener.clean.pin_image"/>
-      </call>
-      <call method="addEventSubscriber">
-        <argument type="service" id="doctrine.orm.listeners.pdo_cache_adapter_doctrine_schema_subscriber"/>
-      </call>
-      <call method="addEventSubscriber">
-        <argument type="service" id="vich_uploader.listener.remove.pin_image"/>
-      </call>
-      <call method="addEventSubscriber">
-        <argument type="service" id="vich_uploader.listener.upload.pin_image"/>
-      </call>
+      <argument type="service" id=".service_locator.aEmUv.r"/>
+      <argument type="collection">
+        <argument>vich_uploader.listener.clean.pin_image</argument>
+        <argument>vich_uploader.listener.clean.category_image</argument>
+        <argument>doctrine.orm.listeners.pdo_cache_adapter_doctrine_schema_subscriber</argument>
+        <argument>vich_uploader.listener.remove.pin_image</argument>
+        <argument>vich_uploader.listener.upload.pin_image</argument>
+        <argument>vich_uploader.listener.remove.category_image</argument>
+        <argument>vich_uploader.listener.upload.category_image</argument>
+      </argument>
       <call method="addEventListener">
         <argument type="collection">
           <argument>loadClassMetadata</argument>
@@ -4066,6 +4144,18 @@
       <argument type="service" id="doctrine.dbal.default_connection.event_manager"/>
       <argument type="collection"/>
       <factory service="doctrine.dbal.connection_factory" method="createConnection"/>
+    </service>
+    <service id="Doctrine\Bundle\DoctrineBundle\Dbal\ManagerRegistryAwareConnectionProvider" class="Doctrine\Bundle\DoctrineBundle\Dbal\ManagerRegistryAwareConnectionProvider">
+      <argument type="service">
+        <service class="Doctrine\Bundle\DoctrineBundle\Registry" public="true">
+          <tag name="kernel.reset" method="reset"/>
+          <argument type="service" id="service_container"/>
+          <argument>%doctrine.connections%</argument>
+          <argument>%doctrine.entity_managers%</argument>
+          <argument>default</argument>
+          <argument>default</argument>
+        </service>
+      </argument>
     </service>
     <service id=".1_ServiceLocator~AZ2wmLB" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <argument type="collection"/>
@@ -5502,6 +5592,7 @@
     <service id="maker.generator" class="Symfony\Bundle\MakerBundle\Generator" public="false">
       <argument type="service" id="maker.file_manager"/>
       <argument>App</argument>
+      <argument type="service" id="maker.php_compat_util"/>
     </service>
     <service id="maker.entity_class_generator" class="Symfony\Bundle\MakerBundle\Doctrine\EntityClassGenerator" public="false">
       <argument type="service" id="maker.generator"/>
@@ -5514,6 +5605,9 @@
     <service id="maker.security_config_updater" class="Symfony\Bundle\MakerBundle\Security\SecurityConfigUpdater" public="false"/>
     <service id="maker.renderer.form_type_renderer" class="Symfony\Bundle\MakerBundle\Renderer\FormTypeRenderer" public="false">
       <argument type="service" id="maker.generator"/>
+    </service>
+    <service id="maker.php_compat_util" class="Symfony\Bundle\MakerBundle\Util\PhpCompatUtil" public="false">
+      <argument type="service" id="maker.file_manager"/>
     </service>
     <service id="maker.maker.make_authenticator" class="Symfony\Bundle\MakerBundle\Maker\MakeAuthenticator" public="false">
       <tag name="maker.command"/>
@@ -5556,6 +5650,7 @@
     </service>
     <service id="maker.maker.make_functional_test" class="Symfony\Bundle\MakerBundle\Maker\MakeFunctionalTest" public="false">
       <tag name="maker.command"/>
+      <deprecated package="symfony/maker-bundle" version="1.29">The "%service_id%" service is deprecated, use "maker.maker.make_test" instead.</deprecated>
     </service>
     <service id="maker.maker.make_message" class="Symfony\Bundle\MakerBundle\Maker\MakeMessage" public="false">
       <tag name="maker.command"/>
@@ -5569,6 +5664,7 @@
       <argument type="service" id="maker.file_manager"/>
       <argument type="service" id="maker.renderer.form_type_renderer"/>
       <argument type="service" id="router.default"/>
+      <argument type="service" id="maker.doctrine_helper"/>
     </service>
     <service id="maker.maker.make_reset_password" class="Symfony\Bundle\MakerBundle\Maker\MakeResetPassword" public="false">
       <tag name="maker.command"/>
@@ -5589,8 +5685,12 @@
     <service id="maker.maker.make_twig_extension" class="Symfony\Bundle\MakerBundle\Maker\MakeTwigExtension" public="false">
       <tag name="maker.command"/>
     </service>
+    <service id="maker.maker.make_test" class="Symfony\Bundle\MakerBundle\Maker\MakeTest" public="false">
+      <tag name="maker.command"/>
+    </service>
     <service id="maker.maker.make_unit_test" class="Symfony\Bundle\MakerBundle\Maker\MakeUnitTest" public="false">
       <tag name="maker.command"/>
+      <deprecated package="symfony/maker-bundle" version="1.29">The "%service_id%" service is deprecated, use "maker.maker.make_test" instead.</deprecated>
     </service>
     <service id="maker.maker.make_validator" class="Symfony\Bundle\MakerBundle\Maker\MakeValidator" public="false">
       <tag name="maker.command"/>
@@ -5603,7 +5703,6 @@
       <argument type="service" id="maker.file_manager"/>
       <argument type="service" id="maker.user_class_builder"/>
       <argument type="service" id="maker.security_config_updater"/>
-      <argument type="service" id="maker.doctrine_helper"/>
       <argument type="service" id="maker.entity_class_generator"/>
     </service>
     <service id="maker.maker.make_migration" class="Symfony\Bundle\MakerBundle\Maker\MakeMigration" public="false">
@@ -5650,11 +5749,13 @@
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\EventSubscriber\LougoutEventSubscriber" type="service" id="App\EventSubscriber\LougoutEventSubscriber" on-invalid="ignore_uninitialized"/>
+        <argument key="App\Form\CategoryType" type="service" id="App\Form\CategoryType" on-invalid="ignore_uninitialized"/>
         <argument key="App\Form\ChangePasswordFormType" type="service" id="App\Form\ChangePasswordFormType" on-invalid="ignore_uninitialized"/>
         <argument key="App\Form\PinType" type="service" id="App\Form\PinType" on-invalid="ignore_uninitialized"/>
         <argument key="App\Form\RegistrationFormType" type="service" id="App\Form\RegistrationFormType" on-invalid="ignore_uninitialized"/>
         <argument key="App\Form\ResetPasswordRequestFormType" type="service" id="App\Form\ResetPasswordRequestFormType" on-invalid="ignore_uninitialized"/>
         <argument key="App\Form\UserFormType" type="service" id="App\Form\UserFormType" on-invalid="ignore_uninitialized"/>
+        <argument key="App\Form\UserType" type="service" id="App\Form\UserType" on-invalid="ignore_uninitialized"/>
         <argument key="App\Repository\CategoryRepository" type="service" id="App\Repository\CategoryRepository" on-invalid="ignore_uninitialized"/>
         <argument key="App\Repository\PinRepository" type="service" id="App\Repository\PinRepository" on-invalid="ignore_uninitialized"/>
         <argument key="App\Repository\ResetPasswordRequestRepository" type="service" id="App\Repository\ResetPasswordRequestRepository" on-invalid="ignore_uninitialized"/>
@@ -5663,10 +5764,12 @@
         <argument key="App\Security\LoginFormAuthenticator" type="service" id="App\Security\LoginFormAuthenticator" on-invalid="ignore_uninitialized"/>
         <argument key="App\Security\Voter\PinVoter" type="service" id="App\Security\Voter\PinVoter" on-invalid="ignore_uninitialized"/>
         <argument key="App\Twig\AppExtension" type="service" id="App\Twig\AppExtension" on-invalid="ignore_uninitialized"/>
+        <argument key="Doctrine\Bundle\DoctrineBundle\Dbal\ManagerRegistryAwareConnectionProvider" type="service" id="Doctrine\Bundle\DoctrineBundle\Dbal\ManagerRegistryAwareConnectionProvider" on-invalid="ignore_uninitialized"/>
         <argument key="Doctrine\Common\Annotations\Reader" type="service" id="annotations.cached_reader" on-invalid="ignore_uninitialized"/>
         <argument key="Doctrine\Common\Persistence\ManagerRegistry" type="service" id="doctrine" on-invalid="ignore_uninitialized"/>
         <argument key="Doctrine\DBAL\Connection" type="service" id="doctrine.dbal.default_connection" on-invalid="ignore_uninitialized"/>
         <argument key="Doctrine\DBAL\Driver\Connection" type="service" id="doctrine.dbal.default_connection" on-invalid="ignore_uninitialized"/>
+        <argument key="Doctrine\DBAL\Tools\Console\Command\RunSqlCommand" type="service" id="Doctrine\DBAL\Tools\Console\Command\RunSqlCommand" on-invalid="ignore_uninitialized"/>
         <argument key="Doctrine\ORM\EntityManagerInterface" type="service" id="doctrine.orm.default_entity_manager" on-invalid="ignore_uninitialized"/>
         <argument key="Doctrine\Persistence\ManagerRegistry" type="service" id="doctrine" on-invalid="ignore_uninitialized"/>
         <argument key="Knp\Bundle\TimeBundle\DateTimeFormatter" type="service" id="time.datetime_formatter" on-invalid="ignore_uninitialized"/>
@@ -5722,6 +5825,8 @@
         <argument key="Symfony\Component\HttpKernel\UriSigner" type="service" id="uri_signer" on-invalid="ignore_uninitialized"/>
         <argument key="Symfony\Component\Mailer\MailerInterface" type="service" id="mailer.mailer" on-invalid="ignore_uninitialized"/>
         <argument key="Symfony\Component\Mailer\Transport\TransportInterface" type="service" id="mailer.default_transport" on-invalid="ignore_uninitialized"/>
+        <argument key="Symfony\Component\Mime\MimeTypeGuesserInterface" type="service" id="mime_types" on-invalid="ignore_uninitialized"/>
+        <argument key="Symfony\Component\Mime\MimeTypesInterface" type="service" id="mime_types" on-invalid="ignore_uninitialized"/>
         <argument key="Symfony\Component\Notifier\NotifierInterface" type="service" id="notifier" on-invalid="ignore_uninitialized"/>
         <argument key="Symfony\Component\PropertyAccess\PropertyAccessorInterface" type="service" id="property_accessor" on-invalid="ignore_uninitialized"/>
         <argument key="Symfony\Component\PropertyInfo\PropertyAccessExtractorInterface" type="service" id="property_info" on-invalid="ignore_uninitialized"/>
@@ -5799,7 +5904,7 @@
         <argument key="annotations.reader" type="service" id="annotations.reader" on-invalid="ignore_uninitialized"/>
         <argument key="argument_metadata_factory" type="service" id="argument_metadata_factory" on-invalid="ignore_uninitialized"/>
         <argument key="argument_resolver" type="service" id="debug.argument_resolver" on-invalid="ignore_uninitialized"/>
-        <argument key="argument_resolver.controller_locator" type="service" id=".service_locator.Mu9PfLh" on-invalid="ignore_uninitialized"/>
+        <argument key="argument_resolver.controller_locator" type="service" id=".service_locator.KmKTF90" on-invalid="ignore_uninitialized"/>
         <argument key="argument_resolver.default" type="service" id="debug.argument_resolver.default" on-invalid="ignore_uninitialized"/>
         <argument key="argument_resolver.not_tagged_controller" type="service" id="debug.argument_resolver.not_tagged_controller" on-invalid="ignore_uninitialized"/>
         <argument key="argument_resolver.request" type="service" id="debug.argument_resolver.request" on-invalid="ignore_uninitialized"/>
@@ -5950,6 +6055,7 @@
         <argument key="doctrine.dbal.default_connection.event_manager" type="service" id="doctrine.dbal.default_connection.event_manager" on-invalid="ignore_uninitialized"/>
         <argument key="doctrine.dbal.event_manager" type="service" id="doctrine.dbal.default_connection.event_manager" on-invalid="ignore_uninitialized"/>
         <argument key="doctrine.dbal.logger" type="service" id="doctrine.dbal.logger" on-invalid="ignore_uninitialized"/>
+        <argument key="doctrine.dbal.logger.chain" type="service" id="doctrine.dbal.logger.chain" on-invalid="ignore_uninitialized"/>
         <argument key="doctrine.dbal.logger.chain.default" type="service" id="doctrine.dbal.logger.chain.default" on-invalid="ignore_uninitialized"/>
         <argument key="doctrine.dbal.logger.profiling.default" type="service" id="doctrine.dbal.logger.profiling.default" on-invalid="ignore_uninitialized"/>
         <argument key="doctrine.dbal.well_known_schema_asset_filter" type="service" id="doctrine.dbal.well_known_schema_asset_filter" on-invalid="ignore_uninitialized"/>
@@ -6135,7 +6241,6 @@
         <argument key="maker.auto_command.make_entity" type="service" id="maker.auto_command.make_entity" on-invalid="ignore_uninitialized"/>
         <argument key="maker.auto_command.make_fixtures" type="service" id="maker.auto_command.make_fixtures" on-invalid="ignore_uninitialized"/>
         <argument key="maker.auto_command.make_form" type="service" id="maker.auto_command.make_form" on-invalid="ignore_uninitialized"/>
-        <argument key="maker.auto_command.make_functional_test" type="service" id="maker.auto_command.make_functional_test" on-invalid="ignore_uninitialized"/>
         <argument key="maker.auto_command.make_message" type="service" id="maker.auto_command.make_message" on-invalid="ignore_uninitialized"/>
         <argument key="maker.auto_command.make_messenger_middleware" type="service" id="maker.auto_command.make_messenger_middleware" on-invalid="ignore_uninitialized"/>
         <argument key="maker.auto_command.make_migration" type="service" id="maker.auto_command.make_migration" on-invalid="ignore_uninitialized"/>
@@ -6144,8 +6249,8 @@
         <argument key="maker.auto_command.make_serializer_encoder" type="service" id="maker.auto_command.make_serializer_encoder" on-invalid="ignore_uninitialized"/>
         <argument key="maker.auto_command.make_serializer_normalizer" type="service" id="maker.auto_command.make_serializer_normalizer" on-invalid="ignore_uninitialized"/>
         <argument key="maker.auto_command.make_subscriber" type="service" id="maker.auto_command.make_subscriber" on-invalid="ignore_uninitialized"/>
+        <argument key="maker.auto_command.make_test" type="service" id="maker.auto_command.make_test" on-invalid="ignore_uninitialized"/>
         <argument key="maker.auto_command.make_twig_extension" type="service" id="maker.auto_command.make_twig_extension" on-invalid="ignore_uninitialized"/>
-        <argument key="maker.auto_command.make_unit_test" type="service" id="maker.auto_command.make_unit_test" on-invalid="ignore_uninitialized"/>
         <argument key="maker.auto_command.make_user" type="service" id="maker.auto_command.make_user" on-invalid="ignore_uninitialized"/>
         <argument key="maker.auto_command.make_validator" type="service" id="maker.auto_command.make_validator" on-invalid="ignore_uninitialized"/>
         <argument key="maker.auto_command.make_voter" type="service" id="maker.auto_command.make_voter" on-invalid="ignore_uninitialized"/>
@@ -6175,11 +6280,13 @@
         <argument key="maker.maker.make_serializer_encoder" type="service" id="maker.maker.make_serializer_encoder" on-invalid="ignore_uninitialized"/>
         <argument key="maker.maker.make_serializer_normalizer" type="service" id="maker.maker.make_serializer_normalizer" on-invalid="ignore_uninitialized"/>
         <argument key="maker.maker.make_subscriber" type="service" id="maker.maker.make_subscriber" on-invalid="ignore_uninitialized"/>
+        <argument key="maker.maker.make_test" type="service" id="maker.maker.make_test" on-invalid="ignore_uninitialized"/>
         <argument key="maker.maker.make_twig_extension" type="service" id="maker.maker.make_twig_extension" on-invalid="ignore_uninitialized"/>
         <argument key="maker.maker.make_unit_test" type="service" id="maker.maker.make_unit_test" on-invalid="ignore_uninitialized"/>
         <argument key="maker.maker.make_user" type="service" id="maker.maker.make_user" on-invalid="ignore_uninitialized"/>
         <argument key="maker.maker.make_validator" type="service" id="maker.maker.make_validator" on-invalid="ignore_uninitialized"/>
         <argument key="maker.maker.make_voter" type="service" id="maker.maker.make_voter" on-invalid="ignore_uninitialized"/>
+        <argument key="maker.php_compat_util" type="service" id="maker.php_compat_util" on-invalid="ignore_uninitialized"/>
         <argument key="maker.renderer.form_type_renderer" type="service" id="maker.renderer.form_type_renderer" on-invalid="ignore_uninitialized"/>
         <argument key="maker.security_config_updater" type="service" id="maker.security_config_updater" on-invalid="ignore_uninitialized"/>
         <argument key="maker.user_class_builder" type="service" id="maker.user_class_builder" on-invalid="ignore_uninitialized"/>
@@ -6377,7 +6484,6 @@
         <argument key="texter.transport_factory" type="service" id="texter.transport_factory" on-invalid="ignore_uninitialized"/>
         <argument key="texter.transports" type="service" id="texter.transports" on-invalid="ignore_uninitialized"/>
         <argument key="time.datetime_formatter" type="service" id="time.datetime_formatter" on-invalid="ignore_uninitialized"/>
-        <argument key="time.templating.helper.time" type="service" id="time.templating.helper.time" on-invalid="ignore_uninitialized"/>
         <argument key="time.twig.extension.time" type="service" id="time.twig.extension.time" on-invalid="ignore_uninitialized"/>
         <argument key="translation.dumper.csv" type="service" id="translation.dumper.csv" on-invalid="ignore_uninitialized"/>
         <argument key="translation.dumper.ini" type="service" id="translation.dumper.ini" on-invalid="ignore_uninitialized"/>
@@ -6480,6 +6586,7 @@
         <argument key="vich_uploader.command.mapping_list_classes" type="service" id="vich_uploader.command.mapping_list_classes" on-invalid="ignore_uninitialized"/>
         <argument key="vich_uploader.current_date_time_helper" type="service" id="vich_uploader.current_date_time_helper" on-invalid="ignore_uninitialized"/>
         <argument key="vich_uploader.file_injector" type="service" id="vich_uploader.file_injector" on-invalid="ignore_uninitialized"/>
+        <argument key="vich_uploader.listener.clean.category_image" type="service" id="vich_uploader.listener.clean.category_image" on-invalid="ignore_uninitialized"/>
         <argument key="vich_uploader.listener.clean.mongodb" type="service" id="vich_uploader.listener.clean.mongodb" on-invalid="ignore_uninitialized"/>
         <argument key="vich_uploader.listener.clean.orm" type="service" id="vich_uploader.listener.clean.orm" on-invalid="ignore_uninitialized"/>
         <argument key="vich_uploader.listener.clean.phpcr" type="service" id="vich_uploader.listener.clean.phpcr" on-invalid="ignore_uninitialized"/>
@@ -6487,10 +6594,12 @@
         <argument key="vich_uploader.listener.inject.mongodb" type="service" id="vich_uploader.listener.inject.mongodb" on-invalid="ignore_uninitialized"/>
         <argument key="vich_uploader.listener.inject.orm" type="service" id="vich_uploader.listener.inject.orm" on-invalid="ignore_uninitialized"/>
         <argument key="vich_uploader.listener.inject.phpcr" type="service" id="vich_uploader.listener.inject.phpcr" on-invalid="ignore_uninitialized"/>
+        <argument key="vich_uploader.listener.remove.category_image" type="service" id="vich_uploader.listener.remove.category_image" on-invalid="ignore_uninitialized"/>
         <argument key="vich_uploader.listener.remove.mongodb" type="service" id="vich_uploader.listener.remove.mongodb" on-invalid="ignore_uninitialized"/>
         <argument key="vich_uploader.listener.remove.orm" type="service" id="vich_uploader.listener.remove.orm" on-invalid="ignore_uninitialized"/>
         <argument key="vich_uploader.listener.remove.phpcr" type="service" id="vich_uploader.listener.remove.phpcr" on-invalid="ignore_uninitialized"/>
         <argument key="vich_uploader.listener.remove.pin_image" type="service" id="vich_uploader.listener.remove.pin_image" on-invalid="ignore_uninitialized"/>
+        <argument key="vich_uploader.listener.upload.category_image" type="service" id="vich_uploader.listener.upload.category_image" on-invalid="ignore_uninitialized"/>
         <argument key="vich_uploader.listener.upload.mongodb" type="service" id="vich_uploader.listener.upload.mongodb" on-invalid="ignore_uninitialized"/>
         <argument key="vich_uploader.listener.upload.orm" type="service" id="vich_uploader.listener.upload.orm" on-invalid="ignore_uninitialized"/>
         <argument key="vich_uploader.listener.upload.phpcr" type="service" id="vich_uploader.listener.upload.phpcr" on-invalid="ignore_uninitialized"/>
@@ -6518,6 +6627,7 @@
         <argument key="webpack_encore.exception_listener" type="service" id="webpack_encore.exception_listener" on-invalid="ignore_uninitialized"/>
         <argument key="webpack_encore.tag_renderer" type="service" id="webpack_encore.tag_renderer" on-invalid="ignore_uninitialized"/>
         <argument key="webpack_encore.twig_entry_files_extension" type="service" id="webpack_encore.twig_entry_files_extension" on-invalid="ignore_uninitialized"/>
+        <argument key="webpack_encore.twig_stimulus_extension" type="service" id="webpack_encore.twig_stimulus_extension" on-invalid="ignore_uninitialized"/>
       </argument>
     </service>
     <service id="time.datetime_formatter" class="Knp\Bundle\TimeBundle\DateTimeFormatter">
@@ -6525,10 +6635,6 @@
     </service>
     <service id="time.twig.extension.time" class="Knp\Bundle\TimeBundle\Twig\Extension\TimeExtension" public="false">
       <tag name="twig.extension"/>
-      <argument type="service" id="time.datetime_formatter"/>
-    </service>
-    <service id="time.templating.helper.time" class="Knp\Bundle\TimeBundle\Templating\Helper\TimeHelper">
-      <tag name="templating.helper" alias="time"/>
       <argument type="service" id="time.datetime_formatter"/>
     </service>
     <service id=".1_ServiceLocator~7ym7edS" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
@@ -6547,10 +6653,16 @@
       <argument type="service" id="webpack_encore.entrypoint_lookup_collection"/>
       <argument type="service" id="assets.packages"/>
       <argument type="collection"/>
+      <argument type="collection"/>
+      <argument type="collection"/>
+      <argument type="service" id="debug.event_dispatcher"/>
     </service>
     <service id="webpack_encore.twig_entry_files_extension" class="Symfony\WebpackEncoreBundle\Twig\EntryFilesTwigExtension" public="false">
       <tag name="twig.extension"/>
       <argument type="service" id=".1_ServiceLocator~7ym7edS"/>
+    </service>
+    <service id="webpack_encore.twig_stimulus_extension" class="Symfony\WebpackEncoreBundle\Twig\StimulusTwigExtension" public="false">
+      <tag name="twig.extension"/>
     </service>
     <service id="webpack_encore.entrypoint_lookup.cache_warmer" class="Symfony\WebpackEncoreBundle\CacheWarmer\EntrypointCacheWarmer" public="false">
       <tag name="kernel.cache_warmer"/>
@@ -6591,6 +6703,9 @@
       </argument>
     </service>
     <service id="Vich\UploaderBundle\Naming\SmartUniqueNamer.pin_image" class="Vich\UploaderBundle\Naming\SmartUniqueNamer" public="true">
+      <argument type="service" id="Vich\UploaderBundle\Util\Transliterator"/>
+    </service>
+    <service id="Vich\UploaderBundle\Naming\SmartUniqueNamer.category_image" class="Vich\UploaderBundle\Naming\SmartUniqueNamer" public="true">
       <argument type="service" id="Vich\UploaderBundle\Util\Transliterator"/>
     </service>
     <service id="vich_uploader.adapter.mongodb" class="Vich\UploaderBundle\Adapter\ODM\MongoDB\MongoDBAdapter" public="false"/>
@@ -6831,6 +6946,27 @@
       <argument type="service" id="vich_uploader.metadata_reader"/>
       <argument type="service" id="vich_uploader.upload_handler"/>
     </service>
+    <service id="vich_uploader.listener.clean.category_image" class="Vich\UploaderBundle\EventListener\Doctrine\CleanListener" public="false">
+      <tag name="doctrine.event_subscriber" priority="50"/>
+      <argument>category_image</argument>
+      <argument type="service" id="vich_uploader.adapter.orm"/>
+      <argument type="service" id="vich_uploader.metadata_reader"/>
+      <argument type="service" id="vich_uploader.upload_handler"/>
+    </service>
+    <service id="vich_uploader.listener.remove.category_image" class="Vich\UploaderBundle\EventListener\Doctrine\RemoveListener" public="false">
+      <tag name="doctrine.event_subscriber" priority="0"/>
+      <argument>category_image</argument>
+      <argument type="service" id="vich_uploader.adapter.orm"/>
+      <argument type="service" id="vich_uploader.metadata_reader"/>
+      <argument type="service" id="vich_uploader.upload_handler"/>
+    </service>
+    <service id="vich_uploader.listener.upload.category_image" class="Vich\UploaderBundle\EventListener\Doctrine\UploadListener" public="false">
+      <tag name="doctrine.event_subscriber" priority="0"/>
+      <argument>category_image</argument>
+      <argument type="service" id="vich_uploader.adapter.orm"/>
+      <argument type="service" id="vich_uploader.metadata_reader"/>
+      <argument type="service" id="vich_uploader.upload_handler"/>
+    </service>
     <service id="liip_imagine.mime_types" class="Symfony\Component\Mime\MimeTypes">
       <factory class="Symfony\Component\Mime\MimeTypes" method="getDefault"/>
     </service>
@@ -7038,6 +7174,7 @@
       <argument type="service" id="liip_imagine.cache.signer"/>
       <argument type="service" id="debug.event_dispatcher"/>
       <argument>default</argument>
+      <argument>false</argument>
       <call method="addResolver">
         <argument>default</argument>
         <argument type="service" id="liip_imagine.cache.resolver.default"/>
@@ -7054,6 +7191,8 @@
       <argument type="service" id="liip_imagine.data.manager"/>
       <argument type="service" id="liip_imagine.filter.manager"/>
       <argument type="service" id="liip_imagine.cache.manager"/>
+      <argument>false</argument>
+      <argument>%liip_imagine.webp.options%</argument>
       <argument type="service" id="monolog.logger" on-invalid="ignore"/>
     </service>
     <service id="liip_imagine.controller.config" class="Liip\ImagineBundle\Config\Controller\ControllerConfig" public="false">
@@ -7358,6 +7497,9 @@
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\AccountController" class="App\Controller\AccountController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\AccountController" class="App\Controller\AccountController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\AccountController" class="App\Controller\AccountController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\CategoryController" class="App\Controller\CategoryController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\CategoryController" class="App\Controller\CategoryController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\CategoryController" class="App\Controller\CategoryController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\PinsController" class="App\Controller\PinsController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\PinsController" class="App\Controller\PinsController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\PinsController" class="App\Controller\PinsController" autowire="true" autoconfigure="true" abstract="true"/>
@@ -7370,8 +7512,13 @@
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\SecurityController" class="App\Controller\SecurityController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\SecurityController" class="App\Controller\SecurityController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\SecurityController" class="App\Controller\SecurityController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\UserController" class="App\Controller\UserController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\UserController" class="App\Controller\UserController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\UserController" class="App\Controller\UserController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\EventDispatcher\EventSubscriberInterface.0.App\EventSubscriber\LougoutEventSubscriber" class="App\EventSubscriber\LougoutEventSubscriber" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\EventSubscriber\LougoutEventSubscriber" class="App\EventSubscriber\LougoutEventSubscriber" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\CategoryType" class="App\Form\CategoryType" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Form\CategoryType" class="App\Form\CategoryType" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\ChangePasswordFormType" class="App\Form\ChangePasswordFormType" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Form\ChangePasswordFormType" class="App\Form\ChangePasswordFormType" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\PinType" class="App\Form\PinType" autowire="true" abstract="true"/>
@@ -7382,6 +7529,8 @@
     <service id=".abstract.instanceof.App\Form\ResetPasswordRequestFormType" class="App\Form\ResetPasswordRequestFormType" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\UserFormType" class="App\Form\UserFormType" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Form\UserFormType" class="App\Form\UserFormType" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\UserType" class="App\Form\UserType" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Form\UserType" class="App\Form\UserType" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\CategoryRepository" class="App\Repository\CategoryRepository" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\CategoryRepository" class="App\Repository\CategoryRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\PinRepository" class="App\Repository\PinRepository" autowire="true" abstract="true"/>
@@ -7421,6 +7570,9 @@
       <argument type="service" id="maker.maker.make_authenticator"/>
       <argument type="service" id="maker.file_manager"/>
       <argument type="service" id="maker.generator"/>
+      <call method="setDescription">
+        <argument>Creates a Guard authenticator of different flavors</argument>
+      </call>
       <call method="setName">
         <argument>make:auth</argument>
       </call>
@@ -7431,6 +7583,9 @@
       <argument type="service" id="maker.maker.make_command"/>
       <argument type="service" id="maker.file_manager"/>
       <argument type="service" id="maker.generator"/>
+      <call method="setDescription">
+        <argument>Creates a new console command class</argument>
+      </call>
       <call method="setName">
         <argument>make:command</argument>
       </call>
@@ -7441,6 +7596,9 @@
       <argument type="service" id="maker.maker.make_controller"/>
       <argument type="service" id="maker.file_manager"/>
       <argument type="service" id="maker.generator"/>
+      <call method="setDescription">
+        <argument>Creates a new controller class</argument>
+      </call>
       <call method="setName">
         <argument>make:controller</argument>
       </call>
@@ -7451,6 +7609,9 @@
       <argument type="service" id="maker.maker.make_crud"/>
       <argument type="service" id="maker.file_manager"/>
       <argument type="service" id="maker.generator"/>
+      <call method="setDescription">
+        <argument>Creates CRUD for Doctrine entity class</argument>
+      </call>
       <call method="setName">
         <argument>make:crud</argument>
       </call>
@@ -7461,6 +7622,9 @@
       <argument type="service" id="maker.maker.make_docker_database"/>
       <argument type="service" id="maker.file_manager"/>
       <argument type="service" id="maker.generator"/>
+      <call method="setDescription">
+        <argument>Adds a database container to your docker-compose.yaml file</argument>
+      </call>
       <call method="setName">
         <argument>make:docker:database</argument>
       </call>
@@ -7471,6 +7635,9 @@
       <argument type="service" id="maker.maker.make_entity"/>
       <argument type="service" id="maker.file_manager"/>
       <argument type="service" id="maker.generator"/>
+      <call method="setDescription">
+        <argument>Creates or updates a Doctrine entity class, and optionally an API Platform resource</argument>
+      </call>
       <call method="setName">
         <argument>make:entity</argument>
       </call>
@@ -7481,6 +7648,9 @@
       <argument type="service" id="maker.maker.make_fixtures"/>
       <argument type="service" id="maker.file_manager"/>
       <argument type="service" id="maker.generator"/>
+      <call method="setDescription">
+        <argument>Creates a new class to load Doctrine fixtures</argument>
+      </call>
       <call method="setName">
         <argument>make:fixtures</argument>
       </call>
@@ -7491,18 +7661,11 @@
       <argument type="service" id="maker.maker.make_form"/>
       <argument type="service" id="maker.file_manager"/>
       <argument type="service" id="maker.generator"/>
+      <call method="setDescription">
+        <argument>Creates a new form class</argument>
+      </call>
       <call method="setName">
         <argument>make:form</argument>
-      </call>
-    </service>
-    <service id="maker.auto_command.make_functional_test" class="Symfony\Bundle\MakerBundle\Command\MakerCommand" public="false">
-      <tag name="console.command" command="make:functional-test"/>
-      <tag name="container.no_preload"/>
-      <argument type="service" id="maker.maker.make_functional_test"/>
-      <argument type="service" id="maker.file_manager"/>
-      <argument type="service" id="maker.generator"/>
-      <call method="setName">
-        <argument>make:functional-test</argument>
       </call>
     </service>
     <service id="maker.auto_command.make_message" class="Symfony\Bundle\MakerBundle\Command\MakerCommand" public="false">
@@ -7511,6 +7674,9 @@
       <argument type="service" id="maker.maker.make_message"/>
       <argument type="service" id="maker.file_manager"/>
       <argument type="service" id="maker.generator"/>
+      <call method="setDescription">
+        <argument>Creates a new message and handler</argument>
+      </call>
       <call method="setName">
         <argument>make:message</argument>
       </call>
@@ -7521,6 +7687,9 @@
       <argument type="service" id="maker.maker.make_messenger_middleware"/>
       <argument type="service" id="maker.file_manager"/>
       <argument type="service" id="maker.generator"/>
+      <call method="setDescription">
+        <argument>Creates a new messenger middleware</argument>
+      </call>
       <call method="setName">
         <argument>make:messenger-middleware</argument>
       </call>
@@ -7531,6 +7700,9 @@
       <argument type="service" id="maker.maker.make_registration_form"/>
       <argument type="service" id="maker.file_manager"/>
       <argument type="service" id="maker.generator"/>
+      <call method="setDescription">
+        <argument>Creates a new registration form system</argument>
+      </call>
       <call method="setName">
         <argument>make:registration-form</argument>
       </call>
@@ -7541,6 +7713,9 @@
       <argument type="service" id="maker.maker.make_reset_password"/>
       <argument type="service" id="maker.file_manager"/>
       <argument type="service" id="maker.generator"/>
+      <call method="setDescription">
+        <argument>Create controller, entity, and repositories for use with symfonycasts/reset-password-bundle</argument>
+      </call>
       <call method="setName">
         <argument>make:reset-password</argument>
       </call>
@@ -7551,6 +7726,9 @@
       <argument type="service" id="maker.maker.make_serializer_encoder"/>
       <argument type="service" id="maker.file_manager"/>
       <argument type="service" id="maker.generator"/>
+      <call method="setDescription">
+        <argument>Creates a new serializer encoder class</argument>
+      </call>
       <call method="setName">
         <argument>make:serializer:encoder</argument>
       </call>
@@ -7561,6 +7739,9 @@
       <argument type="service" id="maker.maker.make_serializer_normalizer"/>
       <argument type="service" id="maker.file_manager"/>
       <argument type="service" id="maker.generator"/>
+      <call method="setDescription">
+        <argument>Creates a new serializer normalizer class</argument>
+      </call>
       <call method="setName">
         <argument>make:serializer:normalizer</argument>
       </call>
@@ -7571,6 +7752,9 @@
       <argument type="service" id="maker.maker.make_subscriber"/>
       <argument type="service" id="maker.file_manager"/>
       <argument type="service" id="maker.generator"/>
+      <call method="setDescription">
+        <argument>Creates a new event subscriber class</argument>
+      </call>
       <call method="setName">
         <argument>make:subscriber</argument>
       </call>
@@ -7581,18 +7765,32 @@
       <argument type="service" id="maker.maker.make_twig_extension"/>
       <argument type="service" id="maker.file_manager"/>
       <argument type="service" id="maker.generator"/>
+      <call method="setDescription">
+        <argument>Creates a new Twig extension class</argument>
+      </call>
       <call method="setName">
         <argument>make:twig-extension</argument>
       </call>
     </service>
-    <service id="maker.auto_command.make_unit_test" class="Symfony\Bundle\MakerBundle\Command\MakerCommand" public="false">
-      <tag name="console.command" command="make:unit-test"/>
+    <service id="maker.auto_command.make_test" class="Symfony\Bundle\MakerBundle\Command\MakerCommand" public="false">
+      <tag name="console.command" command="make:test"/>
+      <tag name="console.command" command="make:unit-test" description="Deprecated alias of &quot;make:test&quot;"/>
+      <tag name="console.command" command="make:functional-test" description="Deprecated alias of &quot;make:test&quot;"/>
       <tag name="container.no_preload"/>
-      <argument type="service" id="maker.maker.make_unit_test"/>
+      <argument type="service" id="maker.maker.make_test"/>
       <argument type="service" id="maker.file_manager"/>
       <argument type="service" id="maker.generator"/>
+      <call method="setDescription">
+        <argument>Creates a new test class</argument>
+      </call>
       <call method="setName">
-        <argument>make:unit-test</argument>
+        <argument>make:test</argument>
+      </call>
+      <call method="setAliases">
+        <argument type="collection">
+          <argument>make:unit-test</argument>
+          <argument>make:functional-test</argument>
+        </argument>
       </call>
     </service>
     <service id="maker.auto_command.make_validator" class="Symfony\Bundle\MakerBundle\Command\MakerCommand" public="false">
@@ -7601,6 +7799,9 @@
       <argument type="service" id="maker.maker.make_validator"/>
       <argument type="service" id="maker.file_manager"/>
       <argument type="service" id="maker.generator"/>
+      <call method="setDescription">
+        <argument>Creates a new validator and constraint class</argument>
+      </call>
       <call method="setName">
         <argument>make:validator</argument>
       </call>
@@ -7611,6 +7812,9 @@
       <argument type="service" id="maker.maker.make_voter"/>
       <argument type="service" id="maker.file_manager"/>
       <argument type="service" id="maker.generator"/>
+      <call method="setDescription">
+        <argument>Creates a new security voter class</argument>
+      </call>
       <call method="setName">
         <argument>make:voter</argument>
       </call>
@@ -7621,6 +7825,9 @@
       <argument type="service" id="maker.maker.make_user"/>
       <argument type="service" id="maker.file_manager"/>
       <argument type="service" id="maker.generator"/>
+      <call method="setDescription">
+        <argument>Creates a new security user class</argument>
+      </call>
       <call method="setName">
         <argument>make:user</argument>
       </call>
@@ -7631,6 +7838,9 @@
       <argument type="service" id="maker.maker.make_migration"/>
       <argument type="service" id="maker.file_manager"/>
       <argument type="service" id="maker.generator"/>
+      <call method="setDescription">
+        <argument>Creates a new migration based on database changes</argument>
+      </call>
       <call method="setName">
         <argument>make:migration</argument>
       </call>
@@ -7652,6 +7862,18 @@
       <argument type="collection">
         <argument key="em" type="service" id="doctrine.orm.default_entity_manager"/>
         <argument key="passwordEncoder" type="service" id="security.user_password_encoder.generic"/>
+      </argument>
+    </service>
+    <service id=".service_locator.zAmj.kw" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="categoryRepository" type="service" id="App\Repository\CategoryRepository"/>
+      </argument>
+    </service>
+    <service id=".service_locator.wNIwF8O" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="category" type="service" id=".errored..service_locator.wNIwF8O.App\Entity\Category"/>
       </argument>
     </service>
     <service id=".service_locator.XWFqqjH" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
@@ -7700,11 +7922,27 @@
         <argument key="authenticationUtils" type="service" id="security.authentication_utils"/>
       </argument>
     </service>
-    <service id=".service_locator.Mu9PfLh" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+    <service id=".service_locator.FXD6KYr" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="userRepository" type="service" id="App\Repository\UserRepository"/>
+      </argument>
+    </service>
+    <service id=".service_locator.hEwcf7A" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="user" type="service" id=".errored..service_locator.hEwcf7A.App\Entity\User"/>
+      </argument>
+    </service>
+    <service id=".service_locator.KmKTF90" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Controller\AccountController::changePassword" type="service" id=".service_locator.efJHEIX"/>
         <argument key="App\Controller\AccountController::edit" type="service" id=".service_locator.efJHEIX"/>
+        <argument key="App\Controller\CategoryController::delete" type="service" id=".service_locator.wNIwF8O"/>
+        <argument key="App\Controller\CategoryController::edit" type="service" id=".service_locator.wNIwF8O"/>
+        <argument key="App\Controller\CategoryController::index" type="service" id=".service_locator.zAmj.kw"/>
+        <argument key="App\Controller\CategoryController::show" type="service" id=".service_locator.wNIwF8O"/>
         <argument key="App\Controller\PinsController::delete" type="service" id=".service_locator.bSMTVI5"/>
         <argument key="App\Controller\PinsController::edit" type="service" id=".service_locator.Tpkrt51"/>
         <argument key="App\Controller\PinsController::index" type="service" id=".service_locator.XWFqqjH"/>
@@ -7713,6 +7951,10 @@
         <argument key="App\Controller\ResetPasswordController::request" type="service" id=".service_locator.A0rcl1e"/>
         <argument key="App\Controller\ResetPasswordController::reset" type="service" id=".service_locator.j5_bHjD"/>
         <argument key="App\Controller\SecurityController::login" type="service" id=".service_locator.xA8Fw_."/>
+        <argument key="App\Controller\UserController::delete" type="service" id=".service_locator.hEwcf7A"/>
+        <argument key="App\Controller\UserController::edit" type="service" id=".service_locator.hEwcf7A"/>
+        <argument key="App\Controller\UserController::index" type="service" id=".service_locator.FXD6KYr"/>
+        <argument key="App\Controller\UserController::show" type="service" id=".service_locator.hEwcf7A"/>
         <argument key="App\Kernel::loadRoutes" type="service" id=".service_locator.C9JCBPC"/>
         <argument key="App\Kernel::registerContainerConfiguration" type="service" id=".service_locator.C9JCBPC"/>
         <argument key="App\Kernel::terminate" type="service" id=".service_locator.beq5mCo"/>
@@ -7721,6 +7963,10 @@
         <argument key="kernel::terminate" type="service" id=".service_locator.beq5mCo"/>
         <argument key="App\Controller\AccountController:changePassword" type="service" id=".service_locator.efJHEIX"/>
         <argument key="App\Controller\AccountController:edit" type="service" id=".service_locator.efJHEIX"/>
+        <argument key="App\Controller\CategoryController:delete" type="service" id=".service_locator.wNIwF8O"/>
+        <argument key="App\Controller\CategoryController:edit" type="service" id=".service_locator.wNIwF8O"/>
+        <argument key="App\Controller\CategoryController:index" type="service" id=".service_locator.zAmj.kw"/>
+        <argument key="App\Controller\CategoryController:show" type="service" id=".service_locator.wNIwF8O"/>
         <argument key="App\Controller\PinsController:delete" type="service" id=".service_locator.bSMTVI5"/>
         <argument key="App\Controller\PinsController:edit" type="service" id=".service_locator.Tpkrt51"/>
         <argument key="App\Controller\PinsController:index" type="service" id=".service_locator.XWFqqjH"/>
@@ -7729,6 +7975,10 @@
         <argument key="App\Controller\ResetPasswordController:request" type="service" id=".service_locator.A0rcl1e"/>
         <argument key="App\Controller\ResetPasswordController:reset" type="service" id=".service_locator.j5_bHjD"/>
         <argument key="App\Controller\SecurityController:login" type="service" id=".service_locator.xA8Fw_."/>
+        <argument key="App\Controller\UserController:delete" type="service" id=".service_locator.hEwcf7A"/>
+        <argument key="App\Controller\UserController:edit" type="service" id=".service_locator.hEwcf7A"/>
+        <argument key="App\Controller\UserController:index" type="service" id=".service_locator.FXD6KYr"/>
+        <argument key="App\Controller\UserController:show" type="service" id=".service_locator.hEwcf7A"/>
         <argument key="kernel:loadRoutes" type="service" id=".service_locator.C9JCBPC"/>
         <argument key="kernel:registerContainerConfiguration" type="service" id=".service_locator.C9JCBPC"/>
         <argument key="kernel:terminate" type="service" id=".service_locator.beq5mCo"/>
@@ -7793,14 +8043,16 @@
       <argument type="service" id="debug.argument_resolver.not_tagged_controller.inner"/>
       <argument type="service" id="debug.stopwatch"/>
     </service>
-    <service id=".service_locator.FvhGwJM" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+    <service id=".service_locator.Yhnb1di" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
       <argument type="collection">
+        <argument key="App\Form\CategoryType" type="service" id="App\Form\CategoryType"/>
         <argument key="App\Form\ChangePasswordFormType" type="service" id="App\Form\ChangePasswordFormType"/>
         <argument key="App\Form\PinType" type="service" id="App\Form\PinType"/>
         <argument key="App\Form\RegistrationFormType" type="service" id="App\Form\RegistrationFormType"/>
         <argument key="App\Form\ResetPasswordRequestFormType" type="service" id="App\Form\ResetPasswordRequestFormType"/>
         <argument key="App\Form\UserFormType" type="service" id="App\Form\UserFormType"/>
+        <argument key="App\Form\UserType" type="service" id="App\Form\UserType"/>
         <argument key="Liip\ImagineBundle\Form\Type\ImageType" type="service" id="liip_imagine.form.type.image"/>
         <argument key="Symfony\Bridge\Doctrine\Form\Type\EntityType" type="service" id="form.type.entity"/>
         <argument key="Symfony\Component\Form\Extension\Core\Type\ChoiceType" type="service" id="form.type.choice"/>
@@ -7816,10 +8068,17 @@
       <tag name="http_client.client"/>
       <argument type="service" id=".debug.http_client.inner"/>
     </service>
-    <service id=".service_locator.xxFfgCP" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+    <service id=".service_locator.aEmUv.r" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="doctrine.orm.default_listeners.attach_entity_listeners" type="service" id="doctrine.orm.default_listeners.attach_entity_listeners"/>
+        <argument key="doctrine.orm.listeners.pdo_cache_adapter_doctrine_schema_subscriber" type="service" id="doctrine.orm.listeners.pdo_cache_adapter_doctrine_schema_subscriber"/>
+        <argument key="vich_uploader.listener.clean.category_image" type="service" id="vich_uploader.listener.clean.category_image"/>
+        <argument key="vich_uploader.listener.clean.pin_image" type="service" id="vich_uploader.listener.clean.pin_image"/>
+        <argument key="vich_uploader.listener.remove.category_image" type="service" id="vich_uploader.listener.remove.category_image"/>
+        <argument key="vich_uploader.listener.remove.pin_image" type="service" id="vich_uploader.listener.remove.pin_image"/>
+        <argument key="vich_uploader.listener.upload.category_image" type="service" id="vich_uploader.listener.upload.category_image"/>
+        <argument key="vich_uploader.listener.upload.pin_image" type="service" id="vich_uploader.listener.upload.pin_image"/>
       </argument>
     </service>
     <service id=".service_locator.O66mfzU" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
@@ -8041,6 +8300,12 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.g9CqTPp" method="withContext"/>
     </service>
+    <service id=".service_locator.g9CqTPp.App\Controller\CategoryController" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+      <tag name="container.service_locator_context" id="App\Controller\CategoryController"/>
+      <argument>App\Controller\CategoryController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.g9CqTPp" method="withContext"/>
+    </service>
     <service id=".service_locator.g9CqTPp.App\Controller\PinsController" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator_context" id="App\Controller\PinsController"/>
       <argument>App\Controller\PinsController</argument>
@@ -8062,6 +8327,12 @@
     <service id=".service_locator.g9CqTPp.App\Controller\SecurityController" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator_context" id="App\Controller\SecurityController"/>
       <argument>App\Controller\SecurityController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.g9CqTPp" method="withContext"/>
+    </service>
+    <service id=".service_locator.g9CqTPp.App\Controller\UserController" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+      <tag name="container.service_locator_context" id="App\Controller\UserController"/>
+      <argument>App\Controller\UserController</argument>
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.g9CqTPp" method="withContext"/>
     </service>
@@ -8227,12 +8498,12 @@
       <argument type="service" id="security.token_storage"/>
     </service>
     <service id="debug.argument_resolver.service.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver" public="false">
-      <argument type="service" id=".service_locator.Mu9PfLh"/>
+      <argument type="service" id=".service_locator.KmKTF90"/>
     </service>
     <service id="debug.argument_resolver.default.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver" public="false"/>
     <service id="debug.argument_resolver.variadic.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\VariadicValueResolver" public="false"/>
     <service id="debug.argument_resolver.not_tagged_controller.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver" public="false">
-      <argument type="service" id=".service_locator.Mu9PfLh"/>
+      <argument type="service" id=".service_locator.KmKTF90"/>
     </service>
     <service id=".debug.http_client.inner" class="Symfony\Contracts\HttpClient\HttpClientInterface" public="false">
       <argument type="collection"/>
@@ -8244,11 +8515,13 @@
     </service>
     <service id=".errored..service_locator.beq5mCo.Symfony\Component\HttpFoundation\Response" class="Symfony\Component\HttpFoundation\Response"/>
     <service id=".errored..service_locator.C9JCBPC.Symfony\Component\Config\Loader\LoaderInterface" class="Symfony\Component\Config\Loader\LoaderInterface"/>
+    <service id=".errored..service_locator.wNIwF8O.App\Entity\Category" class="App\Entity\Category"/>
     <service id=".errored..service_locator.Tpkrt51.App\Entity\Pin" class="App\Entity\Pin"/>
     <service id=".errored..service_locator.bSMTVI5.App\Entity\Pin" class="App\Entity\Pin"/>
+    <service id=".errored..service_locator.hEwcf7A.App\Entity\User" class="App\Entity\User"/>
     <service id="console.command_loader" class="Symfony\Component\Console\CommandLoader\ContainerCommandLoader" public="true">
       <tag name="container.no_preload"/>
-      <argument type="service" id=".service_locator.S7mSPE7"/>
+      <argument type="service" id=".service_locator.OwxlQWo"/>
       <argument type="collection">
         <argument key="about">console.command.about</argument>
         <argument key="assets:install">console.command.assets_install</argument>
@@ -8281,8 +8554,9 @@
         <argument key="lint:twig">twig.command.lint</argument>
         <argument key="doctrine:database:create">doctrine.database_create_command</argument>
         <argument key="doctrine:database:drop">doctrine.database_drop_command</argument>
-        <argument key="doctrine:database:import">doctrine.database_import_command</argument>
         <argument key="doctrine:query:sql">doctrine.query_sql_command</argument>
+        <argument key="dbal:run-sql">Doctrine\DBAL\Tools\Console\Command\RunSqlCommand</argument>
+        <argument key="doctrine:database:import">doctrine.database_import_command</argument>
         <argument key="doctrine:cache:clear-metadata">doctrine.cache_clear_metadata_command</argument>
         <argument key="doctrine:cache:clear-query">doctrine.cache_clear_query_cache_command</argument>
         <argument key="doctrine:cache:clear-result">doctrine.cache_clear_result_command</argument>
@@ -8329,7 +8603,6 @@
         <argument key="make:entity">maker.auto_command.make_entity</argument>
         <argument key="make:fixtures">maker.auto_command.make_fixtures</argument>
         <argument key="make:form">maker.auto_command.make_form</argument>
-        <argument key="make:functional-test">maker.auto_command.make_functional_test</argument>
         <argument key="make:message">maker.auto_command.make_message</argument>
         <argument key="make:messenger-middleware">maker.auto_command.make_messenger_middleware</argument>
         <argument key="make:registration-form">maker.auto_command.make_registration_form</argument>
@@ -8338,16 +8611,19 @@
         <argument key="make:serializer:normalizer">maker.auto_command.make_serializer_normalizer</argument>
         <argument key="make:subscriber">maker.auto_command.make_subscriber</argument>
         <argument key="make:twig-extension">maker.auto_command.make_twig_extension</argument>
-        <argument key="make:unit-test">maker.auto_command.make_unit_test</argument>
+        <argument key="make:test">maker.auto_command.make_test</argument>
+        <argument key="make:unit-test">maker.auto_command.make_test</argument>
+        <argument key="make:functional-test">maker.auto_command.make_test</argument>
         <argument key="make:validator">maker.auto_command.make_validator</argument>
         <argument key="make:voter">maker.auto_command.make_voter</argument>
         <argument key="make:user">maker.auto_command.make_user</argument>
         <argument key="make:migration">maker.auto_command.make_migration</argument>
       </argument>
     </service>
-    <service id=".service_locator.S7mSPE7" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+    <service id=".service_locator.OwxlQWo" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
       <argument type="collection">
+        <argument key="Doctrine\DBAL\Tools\Console\Command\RunSqlCommand" type="service" id="Doctrine\DBAL\Tools\Console\Command\RunSqlCommand"/>
         <argument key="SymfonyCasts\Bundle\ResetPassword\Command\ResetPasswordRemoveExpiredCommand" type="service" id="SymfonyCasts\Bundle\ResetPassword\Command\ResetPasswordRemoveExpiredCommand"/>
         <argument key="console.command.about" type="service" id="console.command.about"/>
         <argument key="console.command.assets_install" type="service" id="console.command.assets_install"/>
@@ -8418,7 +8694,6 @@
         <argument key="maker.auto_command.make_entity" type="service" id="maker.auto_command.make_entity"/>
         <argument key="maker.auto_command.make_fixtures" type="service" id="maker.auto_command.make_fixtures"/>
         <argument key="maker.auto_command.make_form" type="service" id="maker.auto_command.make_form"/>
-        <argument key="maker.auto_command.make_functional_test" type="service" id="maker.auto_command.make_functional_test"/>
         <argument key="maker.auto_command.make_message" type="service" id="maker.auto_command.make_message"/>
         <argument key="maker.auto_command.make_messenger_middleware" type="service" id="maker.auto_command.make_messenger_middleware"/>
         <argument key="maker.auto_command.make_migration" type="service" id="maker.auto_command.make_migration"/>
@@ -8427,8 +8702,8 @@
         <argument key="maker.auto_command.make_serializer_encoder" type="service" id="maker.auto_command.make_serializer_encoder"/>
         <argument key="maker.auto_command.make_serializer_normalizer" type="service" id="maker.auto_command.make_serializer_normalizer"/>
         <argument key="maker.auto_command.make_subscriber" type="service" id="maker.auto_command.make_subscriber"/>
+        <argument key="maker.auto_command.make_test" type="service" id="maker.auto_command.make_test"/>
         <argument key="maker.auto_command.make_twig_extension" type="service" id="maker.auto_command.make_twig_extension"/>
-        <argument key="maker.auto_command.make_unit_test" type="service" id="maker.auto_command.make_unit_test"/>
         <argument key="maker.auto_command.make_user" type="service" id="maker.auto_command.make_user"/>
         <argument key="maker.auto_command.make_validator" type="service" id="maker.auto_command.make_validator"/>
         <argument key="maker.auto_command.make_voter" type="service" id="maker.auto_command.make_voter"/>
@@ -8611,6 +8886,8 @@
     <service id="Symfony\Component\PropertyInfo\PropertyInitializableExtractorInterface" alias="property_info" public="false"/>
     <service id="Symfony\Component\PropertyInfo\PropertyReadInfoExtractorInterface" alias="property_info.reflection_extractor" public="false"/>
     <service id="Symfony\Component\PropertyInfo\PropertyWriteInfoExtractorInterface" alias="property_info.reflection_extractor" public="false"/>
+    <service id="Symfony\Component\Mime\MimeTypesInterface" alias="mime_types" public="false"/>
+    <service id="Symfony\Component\Mime\MimeTypeGuesserInterface" alias="mime_types" public="false"/>
     <service id="Twig_Environment" alias="twig" public="false"/>
     <service id="Twig\Environment" alias="twig" public="false"/>
     <service id="sensio_framework_extra.converter.doctrine.orm.expression_language" alias="sensio_framework_extra.converter.doctrine.orm.expression_language.default" public="false"/>
@@ -8687,7 +8964,7 @@
     <service id="Knp\Component\Pager\PaginatorInterface" alias="knp_paginator"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.WaGDpDt" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem" public="false"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.Mu9PfLh"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.KmKTF90"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id="Psr\Log\LoggerInterface $requestLogger" alias="monolog.logger.request"/>
     <service id="Psr\Log\LoggerInterface $consoleLogger" alias="monolog.logger.console"/>

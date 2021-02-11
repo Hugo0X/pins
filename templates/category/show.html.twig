@@ -1,0 +1,44 @@
+{% extends 'layouts/base.html.twig' %}
+
+{% block title %}Category{% endblock %}
+
+{% block body %}
+
+<div class="col-md-12">
+
+    <h1 class="mt-5 mb-2 text-left text-muted">Category #{{ category.id }}</h1>
+    <div class="col-md-12">
+
+    <div class="text-right"><a href="{{ path('app_category')}}" class="text-decoration-none btn btn-secondary">🡠 Back</a></div>
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Title</th>
+                <td>{{ category.title }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ category.description }}</td>
+            </tr>
+            <tr>
+                <th>Image</th>
+                <td>
+                    <img src="{{ (category.imageName ? vich_uploader_asset(category) : asset('build/images/defaultPicture.png' )) | imagine_filter('squared_thumbnail_medium') }}" alt="{{ category.title }}"  class="img-thumbnail img-fluid"/>
+                </td>
+
+            </tr>
+        </tbody>
+    </table>
+
+    <form method="post" action="{{ path('app_category_delete', {'id': category.id}) }}" onsubmit="return confirm('Do you really want delete this category?');">
+        <input type="hidden" name="_method" value="DELETE">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ category.id) }}">
+            <div class="mt-5 btn-group">
+                <a href="{{ path('app_category_edit', {'id': category.id}) }}" class="text-decoration-none btn btn-primary btn-lg">Update</a>
+                <button class="btn btn-danger btn-lg">Delete</button>
+            </div>
+    </form>
+    
+    </div>
+</div>
+{% endblock %}

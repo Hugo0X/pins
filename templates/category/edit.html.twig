@@ -1,0 +1,12 @@
+{% extends 'layouts/base.html.twig' %}
+
+{% block title %}Edit Category{% endblock %}
+
+{% block body %}
+<div class="col-md-12">
+    <h1 class="mt-4 text-left text-muted">Update Category #{{ category.id }}</h1>
+    <div class="text-right"><a href="{{ path('app_category_show' , {id: category.id})}}" class="text-decoration-none btn btn-secondary">🡠 Back</a></div>
+
+    {{ include('category/_form.html.twig') }}
+</div>
+{% endblock %}

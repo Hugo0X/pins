@@ -1,0 +1,12 @@
+{% extends 'layouts/base.html.twig' %}
+
+{% block title %}Edit User{% endblock %}
+
+{% block body %}
+<div class="col-md-12">
+    <h1 class="mt-4 text-left text-muted">Update user #{{ user.id }}</h1>
+    <div class="text-right"><a href="{{ path('app_user_show' , {id: user.id})}}" class="text-decoration-none btn btn-secondary">🡠 Back</a></div>
+
+    {{ include('user/_form.html.twig') }}
+</div>
+{% endblock %}

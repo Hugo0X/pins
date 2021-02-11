@@ -138,7 +138,7 @@ class SecurityExtension extends Extension implements PrependExtensionInterface
             $loader->load('security_debug.xml');
         }
 
-        if (!class_exists('Symfony\Component\ExpressionLanguage\ExpressionLanguage')) {
+        if (!class_exists(\Symfony\Component\ExpressionLanguage\ExpressionLanguage::class)) {
             $container->removeDefinition('security.expression_language');
             $container->removeDefinition('security.access.expression_voter');
         }
@@ -271,7 +271,7 @@ class SecurityExtension extends Extension implements PrependExtensionInterface
 
             $configId = 'security.firewall.map.config.'.$name;
 
-            list($matcher, $listeners, $exceptionListener, $logoutListener) = $this->createFirewall($container, $name, $firewall, $authenticationProviders, $providerIds, $configId);
+            [$matcher, $listeners, $exceptionListener, $logoutListener] = $this->createFirewall($container, $name, $firewall, $authenticationProviders, $providerIds, $configId);
 
             $contextId = 'security.firewall.map.context.'.$name;
             $isLazy = !$firewall['stateless'] && (!empty($firewall['anonymous']['lazy']) || $firewall['lazy']);
@@ -318,9 +318,9 @@ class SecurityExtension extends Extension implements PrependExtensionInterface
         if (isset($firewall['request_matcher'])) {
             $matcher = new Reference($firewall['request_matcher']);
         } elseif (isset($firewall['pattern']) || isset($firewall['host'])) {
-            $pattern = isset($firewall['pattern']) ? $firewall['pattern'] : null;
-            $host = isset($firewall['host']) ? $firewall['host'] : null;
-            $methods = isset($firewall['methods']) ? $firewall['methods'] : [];
+            $pattern = $firewall['pattern'] ?? null;
+            $host = $firewall['host'] ?? null;
+            $methods = $firewall['methods'] ?? [];
             $matcher = $this->createRequestMatcher($container, $pattern, $host, null, $methods);
         }
 
@@ -445,11 +445,11 @@ class SecurityExtension extends Extension implements PrependExtensionInterface
         }
 
         // Determine default entry point
-        $configuredEntryPoint = isset($firewall['entry_point']) ? $firewall['entry_point'] : null;
+        $configuredEntryPoint = $firewall['entry_point'] ?? null;
 
         // Authentication listeners
         $firewallAuthenticationProviders = [];
-        list($authListeners, $defaultEntryPoint) = $this->createAuthenticationListeners($container, $id, $firewall, $firewallAuthenticationProviders, $defaultProvider, $providerIds, $configuredEntryPoint, $contextListenerId);
+        [$authListeners, $defaultEntryPoint] = $this->createAuthenticationListeners($container, $id, $firewall, $firewallAuthenticationProviders, $defaultProvider, $providerIds, $configuredEntryPoint, $contextListenerId);
 
         if (!$this->authenticatorManagerEnabled) {
             $authenticationProviders = array_merge($authenticationProviders, $firewallAuthenticationProviders);
@@ -503,8 +503,8 @@ class SecurityExtension extends Extension implements PrependExtensionInterface
         // Exception listener
         $exceptionListener = new Reference($this->createExceptionListener($container, $firewall, $id, $configuredEntryPoint ?: $defaultEntryPoint, $firewall['stateless']));
 
-        $config->replaceArgument(8, isset($firewall['access_denied_handler']) ? $firewall['access_denied_handler'] : null);
-        $config->replaceArgument(9, isset($firewall['access_denied_url']) ? $firewall['access_denied_url'] : null);
+        $config->replaceArgument(8, $firewall['access_denied_handler'] ?? null);
+        $config->replaceArgument(9, $firewall['access_denied_url'] ?? null);
 
         $container->setAlias('security.user_checker.'.$id, new Alias($firewall['user_checker'], false));
 
@@ -518,7 +518,7 @@ class SecurityExtension extends Extension implements PrependExtensionInterface
         }
 
         $config->replaceArgument(10, $listenerKeys);
-        $config->replaceArgument(11, isset($firewall['switch_user']) ? $firewall['switch_user'] : null);
+        $config->replaceArgument(11, $firewall['switch_user'] ?? null);
 
         return [$matcher, $listeners, $exceptionListener, null !== $logoutListenerId ? new Reference($logoutListenerId) : null];
     }
@@ -567,7 +567,7 @@ class SecurityExtension extends Extension implements PrependExtensionInterface
                             $entryPoints[$key] = $entryPoint;
                         }
                     } else {
-                        list($provider, $listenerId, $defaultEntryPoint) = $factory->create($container, $id, $firewall[$key], $userProvider, $defaultEntryPoint);
+                        [$provider, $listenerId, $defaultEntryPoint] = $factory->create($container, $id, $firewall[$key], $userProvider, $defaultEntryPoint);
 
                         $listeners[] = new Reference($listenerId);
                         $authenticationProviders[] = $provider;
@@ -842,7 +842,7 @@ class SecurityExtension extends Extension implements PrependExtensionInterface
             return $this->expressions[$id];
         }
 
-        if (!class_exists('Symfony\Component\ExpressionLanguage\ExpressionLanguage')) {
+        if (!class_exists(\Symfony\Component\ExpressionLanguage\ExpressionLanguage::class)) {
             throw new \RuntimeException('Unable to use expressions as the Symfony ExpressionLanguage component is not installed.');
         }
 

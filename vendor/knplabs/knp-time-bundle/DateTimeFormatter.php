@@ -10,11 +10,6 @@ class DateTimeFormatter
 {
     protected $translator;
 
-    /**
-     * Constructor
-     *
-     * @param  TranslatorInterface $translator Translator used for messages
-     */
     public function __construct(TranslatorInterface $translator)
     {
         $this->translator = $translator;
@@ -22,13 +17,8 @@ class DateTimeFormatter
 
     /**
      * Returns a formatted diff for the given from and to datetimes
-     *
-     * @param  DateTimeInterface $from
-     * @param  DateTimeInterface $to
-     *
-     * @return string
      */
-    public function formatDiff(DateTimeInterface $from, DateTimeInterface $to)
+    public function formatDiff(DateTimeInterface $from, DateTimeInterface $to, string $locale = null): string
     {
         static $units = array(
             'y' => 'year',
@@ -44,11 +34,11 @@ class DateTimeFormatter
         foreach ($units as $attribute => $unit) {
             $count = $diff->$attribute;
             if (0 !== $count) {
-                return $this->doGetDiffMessage($count, $diff->invert, $unit);
+                return $this->doGetDiffMessage($count, $diff->invert, $unit, $locale);
             }
         }
 
-        return $this->getEmptyDiffMessage();
+        return $this->getEmptyDiffMessage($locale);
     }
 
     /**
@@ -56,12 +46,10 @@ class DateTimeFormatter
      *
      * @param  integer $count  The diff count
      * @param  boolean $invert Whether to invert the count
-     * @param  integer $unit   The unit must be either year, month, day, hour,
+     * @param  string $unit   The unit must be either year, month, day, hour,
      *                         minute or second
-     *
-     * @return string
      */
-    public function getDiffMessage($count, $invert, $unit)
+    public function getDiffMessage(int $count, bool $invert, string $unit): string
     {
         if (0 === $count) {
             throw new \InvalidArgumentException('The count must not be null.');
@@ -79,7 +67,7 @@ class DateTimeFormatter
     /**
      * Returns a DateTime instance for the given datetime
      *
-     * @param mixed $datetime
+     * @param mixed $dateTime
      */
     public function getDateTimeObject($dateTime = null): DateTimeInterface
     {
@@ -94,25 +82,23 @@ class DateTimeFormatter
         return new DateTime($dateTime);
     }
 
-    protected function doGetDiffMessage($count, $invert, $unit)
+    protected function doGetDiffMessage(int $count, bool $invert, string $unit, string $locale = null): string
     {
         $id = sprintf('diff.%s.%s', $invert ? 'ago' : 'in', $unit);
 
         // check for Symfony >= 4.2
         if (class_exists('Symfony\Component\Translation\Formatter\IntlFormatter')) {
-            return $this->translator->trans($id, array('%count%' => $count), 'time');
+            return $this->translator->trans($id, array('%count%' => $count), 'time', $locale);
         } else {
-            return $this->translator->transChoice($id, $count, array('%count%' => $count), 'time');
+            return $this->translator->transChoice($id, $count, array('%count%' => $count), 'time', $locale);
         }
     }
 
     /**
      * Returns the message for an empty diff
-     *
-     * @return string
      */
-    public function getEmptyDiffMessage()
+    public function getEmptyDiffMessage(string $locale = null): string
     {
-        return $this->translator->trans('diff.empty', array(), 'time');
+        return $this->translator->trans('diff.empty', array(), 'time', $locale);
     }
 }

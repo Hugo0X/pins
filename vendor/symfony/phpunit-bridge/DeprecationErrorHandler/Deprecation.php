@@ -13,6 +13,8 @@ namespace Symfony\Bridge\PhpUnit\DeprecationErrorHandler;
 
 use PHPUnit\Util\Test;
 use Symfony\Bridge\PhpUnit\Legacy\SymfonyTestsListenerFor;
+use Symfony\Component\Debug\DebugClassLoader as LegacyDebugClassLoader;
+use Symfony\Component\ErrorHandler\DebugClassLoader;
 
 /**
  * @internal
@@ -39,7 +41,7 @@ class Deprecation
 
     /**
      * @var string[] Absolute paths to source or tests of the project, cache
-     *               directories exlcuded because it is based on autoloading
+     *               directories excluded because it is based on autoloading
      *               rules and cache systems typically do not use those
      */
     private static $internalPaths = [];
@@ -58,6 +60,18 @@ class Deprecation
         }
 
         $this->trace = $trace;
+
+        if ('trigger_error' === (isset($trace[1]['function']) ? $trace[1]['function'] : null)
+            && (DebugClassLoader::class === ($class = (isset($trace[2]['class']) ? $trace[2]['class'] : null)) || LegacyDebugClassLoader::class === $class)
+            && 'checkClass' === (isset($trace[2]['function']) ? $trace[2]['function'] : null)
+            && null !== ($extraFile = (isset($trace[2]['args'][1]) ? $trace[2]['args'][1] : null))
+            && '' !== $extraFile
+            && false !== $extraFile = realpath($extraFile)
+        ) {
+            $this->getOriginalFilesStack();
+            array_splice($this->originalFilesStack, 2, 1, $extraFile);
+        }
+
         $this->message = $message;
         $i = \count($this->trace);
         while (1 < $i && $this->lineShouldBeSkipped($this->trace[--$i])) {
@@ -73,7 +87,9 @@ class Deprecation
                 $this->message = $parsedMsg['deprecation'];
                 $this->originClass = $parsedMsg['class'];
                 $this->originMethod = $parsedMsg['method'];
-                $this->originalFilesStack = $parsedMsg['files_stack'];
+                if (isset($parsedMsg['files_stack'])) {
+                    $this->originalFilesStack = $parsedMsg['files_stack'];
+                }
                 // If the deprecation has been triggered via
                 // \Symfony\Bridge\PhpUnit\Legacy\SymfonyTestsListenerTrait::endTest()
                 // then we need to use the serialized information to determine

@@ -4,9 +4,15 @@ namespace App\Entity;
 
 use App\Repository\CategoryRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Validator\Constraints as Assert;
+
+
 
 /**
  * @ORM\Entity(repositoryClass=CategoryRepository::class)
+ * @Vich\Uploadable
  */
 class Category
 {
@@ -28,9 +34,19 @@ class Category
     private $description;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * NOTE: This is not a mapped field of entity metadata, just a simple property.
+     * 
+     * @Vich\UploadableField(mapping="category_image", fileNameProperty="imageName")
+     * @Assert\Image(maxSize="8M")
+     * 
+     * @var File|null
      */
-    private $pictureName;
+    private $imageFile;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $imageName;
 
     public function getId(): ?int
     {
@@ -61,14 +77,27 @@ class Category
         return $this;
     }
 
-    public function getPictureName(): ?string
+    /**
+     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile|null $imageFile
+     */
+    public function setImageFile(?File $imageFile = null): void
     {
-        return $this->pictureName;
+        $this->imageFile = $imageFile;
     }
 
-    public function setPictureName(string $pictureName): self
+    public function getImageFile(): ?File
     {
-        $this->pictureName = $pictureName;
+        return $this->imageFile;
+    }
+
+    public function getImageName(): ?string
+    {
+        return $this->imageName;
+    }
+
+    public function setImageName(?string $imageName): self
+    {
+        $this->imageName = $imageName;
 
         return $this;
     }

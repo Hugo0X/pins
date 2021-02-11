@@ -126,6 +126,7 @@
             <argument type="service" id="liip_imagine.cache.signer" />
             <argument type="service" id="event_dispatcher" />
             <argument>%liip_imagine.cache.resolver.default%</argument>
+            <argument>%liip_imagine.webp.generate%</argument>
         </service>
 
         <service id="liip_imagine.filter.configuration" class="Liip\ImagineBundle\Imagine\Filter\FilterConfiguration">
@@ -136,6 +137,8 @@
             <argument type="service" id="liip_imagine.data.manager" />
             <argument type="service" id="liip_imagine.filter.manager" />
             <argument type="service" id="liip_imagine.cache.manager" />
+            <argument>%liip_imagine.webp.generate%</argument>
+            <argument>%liip_imagine.webp.options%</argument>
             <argument type="service" id="logger" on-invalid="ignore" />
         </service>
 

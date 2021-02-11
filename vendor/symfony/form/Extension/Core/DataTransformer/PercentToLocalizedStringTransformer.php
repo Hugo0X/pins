@@ -23,8 +23,8 @@ use Symfony\Component\Form\Exception\UnexpectedTypeException;
  */
 class PercentToLocalizedStringTransformer implements DataTransformerInterface
 {
-    const FRACTIONAL = 'fractional';
-    const INTEGER = 'integer';
+    public const FRACTIONAL = 'fractional';
+    public const INTEGER = 'integer';
 
     protected static $types = [
         self::FRACTIONAL,
@@ -204,7 +204,7 @@ class PercentToLocalizedStringTransformer implements DataTransformerInterface
     {
         if (null !== $this->scale && null !== $this->roundingMode) {
             // shift number to maintain the correct scale during rounding
-            $roundingCoef = pow(10, $this->scale);
+            $roundingCoef = 10 ** $this->scale;
 
             if (self::FRACTIONAL == $this->type) {
                 $roundingCoef *= 100;

@@ -54,7 +54,7 @@ class DoctrineExtractor implements PropertyListExtractorInterface, PropertyTypeE
 
         $properties = array_merge($metadata->getFieldNames(), $metadata->getAssociationNames());
 
-        if ($metadata instanceof ClassMetadataInfo && class_exists('Doctrine\ORM\Mapping\Embedded') && $metadata->embeddedClasses) {
+        if ($metadata instanceof ClassMetadataInfo && class_exists(\Doctrine\ORM\Mapping\Embedded::class) && $metadata->embeddedClasses) {
             $properties = array_filter($properties, function ($property) {
                 return false === strpos($property, '.');
             });
@@ -95,18 +95,28 @@ class DoctrineExtractor implements PropertyListExtractorInterface, PropertyTypeE
                 $associationMapping = $metadata->getAssociationMapping($property);
 
                 if (isset($associationMapping['indexBy'])) {
-                    $indexProperty = $associationMapping['indexBy'];
                     /** @var ClassMetadataInfo $subMetadata */
                     $subMetadata = $this->entityManager ? $this->entityManager->getClassMetadata($associationMapping['targetEntity']) : $this->classMetadataFactory->getMetadataFor($associationMapping['targetEntity']);
-                    $typeOfField = $subMetadata->getTypeOfField($indexProperty);
 
-                    if (null === $typeOfField) {
-                        $associationMapping = $subMetadata->getAssociationMapping($indexProperty);
+                    // Check if indexBy value is a property
+                    $fieldName = $associationMapping['indexBy'];
+                    if (null === ($typeOfField = $subMetadata->getTypeOfField($fieldName))) {
+                        $fieldName = $subMetadata->getFieldForColumn($associationMapping['indexBy']);
+                        //Not a property, maybe a column name?
+                        if (null === ($typeOfField = $subMetadata->getTypeOfField($fieldName))) {
+                            //Maybe the column name is the association join column?
+                            $associationMapping = $subMetadata->getAssociationMapping($fieldName);
 
-                        /** @var ClassMetadataInfo $subMetadata */
-                        $indexProperty = $subMetadata->getSingleAssociationReferencedJoinColumnName($indexProperty);
-                        $subMetadata = $this->entityManager ? $this->entityManager->getClassMetadata($associationMapping['targetEntity']) : $this->classMetadataFactory->getMetadataFor($associationMapping['targetEntity']);
-                        $typeOfField = $subMetadata->getTypeOfField($indexProperty);
+                            /** @var ClassMetadataInfo $subMetadata */
+                            $indexProperty = $subMetadata->getSingleAssociationReferencedJoinColumnName($fieldName);
+                            $subMetadata = $this->entityManager ? $this->entityManager->getClassMetadata($associationMapping['targetEntity']) : $this->classMetadataFactory->getMetadataFor($associationMapping['targetEntity']);
+
+                            //Not a property, maybe a column name?
+                            if (null === ($typeOfField = $subMetadata->getTypeOfField($indexProperty))) {
+                                $fieldName = $subMetadata->getFieldForColumn($indexProperty);
+                                $typeOfField = $subMetadata->getTypeOfField($fieldName);
+                            }
+                        }
                     }
 
                     if (!$collectionKeyType = $this->getPhpType($typeOfField)) {
@@ -125,7 +135,7 @@ class DoctrineExtractor implements PropertyListExtractorInterface, PropertyTypeE
             )];
         }
 
-        if ($metadata instanceof ClassMetadataInfo && class_exists('Doctrine\ORM\Mapping\Embedded') && isset($metadata->embeddedClasses[$property])) {
+        if ($metadata instanceof ClassMetadataInfo && class_exists(\Doctrine\ORM\Mapping\Embedded::class) && isset($metadata->embeddedClasses[$property])) {
             return [new Type(Type::BUILTIN_TYPE_OBJECT, false, $metadata->embeddedClasses[$property]['class'])];
         }
 

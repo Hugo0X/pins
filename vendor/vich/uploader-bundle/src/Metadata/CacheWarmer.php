@@ -16,8 +16,11 @@ final class CacheWarmer implements CacheWarmerInterface
         $this->metadataReader = $metadataReader;
     }
 
-    public function warmUp($cacheDirectory): void
+    public function warmUp($cacheDir): array
     {
+        if (empty($this->dir)) {
+            return [];
+        }
         $files = [];
         if (!\is_dir($this->dir)) {
             if (!\mkdir($concurrentDirectory = $this->dir, 0777, true) && !\is_dir($concurrentDirectory)) {
@@ -30,6 +33,7 @@ final class CacheWarmer implements CacheWarmerInterface
             $files[] = $class;
         }
         // TODO it could be nice if we return $files, to allow to exploit preloading...
+        return [];
     }
 
     public function isOptional(): bool

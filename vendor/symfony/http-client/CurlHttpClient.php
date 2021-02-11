@@ -170,7 +170,7 @@ final class CurlHttpClient implements HttpClientInterface, LoggerAwareInterface,
             $curlopts[\CURLOPT_DNS_USE_GLOBAL_CACHE] = false;
         }
 
-        if (\defined('CURLOPT_HEADEROPT')) {
+        if (\defined('CURLOPT_HEADEROPT') && \defined('CURLHEADER_SEPARATE')) {
             $curlopts[\CURLOPT_HEADEROPT] = \CURLHEADER_SEPARATE;
         }
 
@@ -269,7 +269,7 @@ final class CurlHttpClient implements HttpClientInterface, LoggerAwareInterface,
         if ($options['bindto']) {
             if (file_exists($options['bindto'])) {
                 $curlopts[\CURLOPT_UNIX_SOCKET_PATH] = $options['bindto'];
-            } elseif (preg_match('/^(.*):(\d+)$/', $options['bindto'], $matches)) {
+            } elseif (0 !== strpos($options['bindto'], 'if!') && preg_match('/^(.*):(\d+)$/', $options['bindto'], $matches)) {
                 $curlopts[\CURLOPT_INTERFACE] = $matches[1];
                 $curlopts[\CURLOPT_LOCALPORT] = $matches[2];
             } else {
@@ -326,8 +326,10 @@ final class CurlHttpClient implements HttpClientInterface, LoggerAwareInterface,
             throw new \TypeError(sprintf('"%s()" expects parameter 1 to be an iterable of CurlResponse objects, "%s" given.', __METHOD__, get_debug_type($responses)));
         }
 
-        $active = 0;
-        while (\CURLM_CALL_MULTI_PERFORM === curl_multi_exec($this->multi->handle, $active));
+        if (\is_resource($this->multi->handle) || $this->multi->handle instanceof \CurlMultiHandle) {
+            $active = 0;
+            while (\CURLM_CALL_MULTI_PERFORM === curl_multi_exec($this->multi->handle, $active));
+        }
 
         return new ResponseStream(CurlResponse::stream($responses, $timeout));
     }
@@ -358,6 +360,16 @@ final class CurlHttpClient implements HttpClientInterface, LoggerAwareInterface,
                 curl_setopt($ch, \CURLOPT_VERBOSE, false);
             }
         }
+    }
+
+    public function __sleep()
+    {
+        throw new \BadMethodCallException('Cannot serialize '.__CLASS__);
+    }
+
+    public function __wakeup()
+    {
+        throw new \BadMethodCallException('Cannot unserialize '.__CLASS__);
     }
 
     public function __destruct()
