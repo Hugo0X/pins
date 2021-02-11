@@ -65,18 +65,25 @@ class CategoryController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/edit", name="app_category_edit", methods={"GET","PUT"})
+     * @Route("/{id<[0-9]+>}/edit", name="app_category_edit", methods={"GET","PUT"})
      */
     public function edit(Request $request, Category $category): Response
     {
         $form = $this->createForm(CategoryType::class, $category, [
             'method' => 'PUT'
         ]);
+        
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
 
+            // dump($category);
+
+            $this->getDoctrine()->getManager()->flush();
+            // dd($category);
+
+            $this->addFlash('success', 'Category successfully updated!');
+            
             return $this->redirectToRoute('app_category');
         }
 
@@ -87,7 +94,7 @@ class CategoryController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="app_category_delete", methods={"DELETE"})
+     * @Route("/{id<[0-9]+>}", name="app_category_delete", methods={"DELETE"})
      */
     public function delete(Request $request, Category $category): Response
     {

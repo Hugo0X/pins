@@ -93,6 +93,7 @@ class PinsController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()){
+       
             $this->em->flush();
 
             $this->addFlash('success', 'Pin successfully updated!');
