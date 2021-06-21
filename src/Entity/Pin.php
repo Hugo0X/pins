@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PinRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Traits\Timestampable;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -66,6 +68,21 @@ class Pin
      * @ORM\JoinColumn(nullable=false)
      */
     private $category;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Volunteer::class, mappedBy="pin")
+     */
+    private $User;
+
+    // /**
+    //  * @ORM\OneToMany(targetEntity=Volunteer::class, mappedBy="volunteer", orphanRemoval=true)
+    //  */
+    // private $volunteer;
+
+    public function __construct()
+    {
+        $this->User = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -151,4 +168,26 @@ class Pin
         return $this;
     }
 
+    // public function addPin(Volunteer $volunteer): self
+    // {
+    //     if (!$this->volunteer->contains($volunteer)) {
+    //         $this->volunteer[] = $volunteer;
+    //         $volunteer->setPin($this);
+    //     }
+
+    //     return $this;
+    // }
+
+    // public function removePin(Volunteer $volunteer): self
+    // {
+    //     if ($this->volunteer->contains($volunteer)) {
+    //         $this->volunteer->removeElement($volunteer);
+    //         // set the owning side to null (unless already changed)
+    //         if ($volunteer->getPin() === $this) {
+    //             $volunteer->setPin(null);
+    //         }
+    //     }
+
+    //     return $this;
+    // }
 }

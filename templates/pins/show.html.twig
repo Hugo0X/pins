@@ -6,19 +6,15 @@
         <div class="col-md-6 mx-auto">
             <article class="pin bg-white rounded shadow">
                     <div class ="mw-100 overflow-hidden rounded-top">                       
-                        <img src="{{ (pin.imageName ? vich_uploader_asset(pin) : asset('build/images/' ~ pin.category.imageName )) | imagine_filter('squared_thumbnail_medium') }}" alt="{{ pin.title }}"  class="w-100"/>            
+                        <img src="{{ (pin.imageName ? vich_uploader_asset(pin) : pin.category.imageName ? vich_uploader_asset(pin.category) ) | imagine_filter('squared_thumbnail_medium') }}" alt="{{ pin.title }}"  class="w-100 img-fluid"/>
                     </div> 
                         <div class="p-3">
-                            <h1 class="h5 text-secondary text-decoration-none">{{ pin.title }}</h1>
-                            {# <p>{{ pin.description | u.truncate(10, '...') }}</p> #}
+                            <h1 class="h5 text-secondary text-decoration-none">{{ pin.title }} - {{ pin.category.title }}</h1>
                             <p class="text-muted h6">
-                            <small>Submitted <time datetime="{{ pin.createdAt |date('Y-m-d H:i:s') }}">{{ pin.createdAt | ago}}</time> by {{ pin.user.fullName}}  </small>
-                            </p>
-                            <p class="pt-3 text-break" >
-                                {{ pin.description}}
+                                <small>Submitted <time datetime="{{ pin.createdAt |date('Y-m-d H:i:s') }}">{{ pin.createdAt | ago}}</time> by {{ pin.user.fullName}}  </small>
                             </p>
                             {% if is_granted('PIN_MANAGE', pin) %}
-                                <div class="pt-3">
+                                <div class="pt-2 mb-3">
                                     <a href="{{ path('app_pins_edit', {'id': pin.id})}}" class="btn btn-light">Edit</a>
                                     <a href="#" onclick="event.preventDefault(); confirm('Are you sure?') && document.getElementById('js-pin-delete-form').submit();" class="btn btn-light">Delete</a>
 
@@ -28,6 +24,42 @@
                                     </form>
                                 </div>
                             {% endif %}
+                            <p class="pt-3 text-break" >
+                                {{ pin.description}}
+                            </p>
+
+                            <h3 class="h4">Voluntaries</h3>
+                             {% if volunteers is not empty %} {# there are already volunteers #}
+                             <ol>
+                                {% for volunteer in volunteers %}
+                                    <li>  {{ volunteer.user.lastName ~ " " ~ volunteer.user.firstName }}</li>      
+                                {% endfor %}
+                            </ol>
+                            {% else %} {# there is no volunteer #}
+                                <p>No volunteer yet, become it! ⬇️⬇️</p> 
+                            {% endif %}
+                            
+                            <div class="mt-3 btn-group">
+                                {% if isCurrentUserVonlunteer %} {# the user isn't yet volunteer  #} 
+                                <a href="#" onclick="event.preventDefault(); confirm('Are you sure?') && document.getElementById('js-volunteer-delete-form').submit();" class="text-decoration-none btn btn-danger btn-lg">I not volunteer</a>
+
+                                    <form id="js-volunteer-delete-form" action="{{ path('app_volunteer_delete', {id: pin.id}) }}" method="post" style="display: none;">
+                                        <input type="hidden" name="id" value="{{ pin.id }}">
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token('volunteer_deletion_' ~ pin.id) }}">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                    </form>
+                                    
+                                {% else %} {# the user is already volunteer  #}
+                                   <a href="#" onclick="event.preventDefault(); document.getElementById('js-pin-volunteer-new-form').submit();" class="text-decoration-none btn btn-success btn-lg">I volunteer</a>
+
+                                    <form id="js-pin-volunteer-new-form" action="{{ path('app_volunteer_new', {id: pin.id}) }}" method="post" style="display: none;">
+                                        <input type="hidden" name="id" value="{{ pin.id }}">
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token('pin_volunteer_new' ~ pin.id) }}">
+                                    </form>
+                                {% endif %}    
+                                <a href='mailto:{{ pin.user.email }}?subject=Query%20about%20the%20"{{ pin.title }}"%20task({{ pin.id }})&body=Link:https://127.0.0.1:8000/pins/{{ pin.id }}'
+                                    class="text-decoration-none btn btn-info btn-lg">Contact</a>
+                            </div>
                         </div>
             </article>
         </div>

@@ -8,6 +8,7 @@ config/secrets/prod/prod.decrypt.private.php
 public/
 var/
 vendor/
+migrations/
 ###< symfony/framework-bundle ###
 
 ###> symfony/phpunit-bridge ###

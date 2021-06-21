@@ -6,7 +6,7 @@ use App\Entity\Pin;
 use App\Form\PinType;
 use App\Repository\PinRepository;
 use App\Repository\UserRepository;
-use App\Repository\CategoryRepository;
+use App\Repository\VolunteerRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -75,9 +75,23 @@ class PinsController extends AbstractController
     /**
      * @Route("/pins/{id<[0-9]+>}", name="app_pins_show", methods={"GET"})
     */
-    public function show(Pin $pin): Response
+    public function show(Pin $pin, VolunteerRepository $volunteerRepository): Response
     {
-        return $this->render('pins/show.html.twig', compact('pin'));
+        $volunteers = $volunteerRepository->findBy(['pin' => $pin]);
+
+        $isCurrentUserVonlunteer = false;
+        foreach( $volunteers as $volunteer) {
+            if($this->getUser() == $volunteer->getUser()) {
+                $isCurrentUserVonlunteer = true;
+                break;
+            }
+        }
+
+        return $this->render('pins/show.html.twig', [
+            'pin' => $pin,
+            'volunteers' => $volunteers,
+            'isCurrentUserVonlunteer' => $isCurrentUserVonlunteer,
+        ]);
     }
 
     /**

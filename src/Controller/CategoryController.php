@@ -9,6 +9,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\CategoryRepository;
 use App\Entity\Category;
 use App\Form\CategoryType;
+use Doctrine\ORM\EntityManagerInterface;
 
 
 /**
@@ -16,6 +17,13 @@ use App\Form\CategoryType;
 */
 class CategoryController extends AbstractController
 {
+    private $em;
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
     /**
      * @Route("/", name="app_category")
      */
@@ -34,9 +42,7 @@ class CategoryController extends AbstractController
     {
         $category = new Category;
 
-        $form =$this->createForm(CategoryType::class, $category, [
-            'method' => 'PUT'
-        ]);
+        $form =$this->createForm(CategoryType::class, $category);
 
         $form->handleRequest($resquest);
 
@@ -77,10 +83,9 @@ class CategoryController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            // dump($category);
 
-            $this->getDoctrine()->getManager()->flush();
-            // dd($category);
+            $this->em->flush();
+
 
             $this->addFlash('success', 'Category successfully updated!');
             

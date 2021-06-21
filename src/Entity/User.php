@@ -71,13 +71,6 @@ class User implements UserInterface
      */
     private $isVerified = false;
 
-    public function __construct()
-    {
-        $this->pins = new ArrayCollection();
-    }
-
-
-
     public function getId(): ?int
     {
         return $this->id;
@@ -231,6 +224,4 @@ class User implements UserInterface
 
         return $this;
     }
-
-
 }
