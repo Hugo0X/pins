@@ -47,8 +47,8 @@ use Symfony\Component\Yaml\Yaml;
  */
 final class MakeAuthenticator extends AbstractMaker
 {
-    const AUTH_TYPE_EMPTY_AUTHENTICATOR = 'empty-authenticator';
-    const AUTH_TYPE_FORM_LOGIN = 'form-login';
+    private const AUTH_TYPE_EMPTY_AUTHENTICATOR = 'empty-authenticator';
+    private const AUTH_TYPE_FORM_LOGIN = 'form-login';
 
     private $fileManager;
 
@@ -403,11 +403,12 @@ final class MakeAuthenticator extends AbstractMaker
     private function providerKeyTypeHint(): string
     {
         $reflectionMethod = new \ReflectionMethod(AbstractFormLoginAuthenticator::class, 'onAuthenticationSuccess');
-        $typeHint = (string) $reflectionMethod->getParameters()[2]->getType();
-        if ($typeHint) {
-            $typeHint .= ' ';
+        $type = $reflectionMethod->getParameters()[2]->getType();
+
+        if (!$type instanceof \ReflectionNamedType) {
+            return '';
         }
 
-        return $typeHint;
+        return sprintf('%s ', $type->getName());
     }
 }

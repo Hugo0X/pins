@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -19,33 +20,55 @@
 
 namespace Doctrine\ORM\Mapping;
 
+use Attribute;
+use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
+use Doctrine\Deprecations\Deprecation;
+
 /**
  * @Annotation
+ * @NamedArgumentConstructor()
  * @Target("PROPERTY")
  */
+#[Attribute(Attribute::TARGET_PROPERTY)]
 final class ManyToOne implements Annotation
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     public $targetEntity;
 
-    /**
-     * @var array<string>
-     */
+    /** @var array<string> */
     public $cascade;
 
     /**
      * The fetching strategy to use for the association.
      *
      * @var string
-     *
      * @Enum({"LAZY", "EAGER", "EXTRA_LAZY"})
      */
     public $fetch = 'LAZY';
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public $inversedBy;
+
+    /**
+     * @param array<string> $cascade
+     */
+    public function __construct(
+        ?string $targetEntity = null,
+        ?array $cascade = null,
+        string $fetch = 'LAZY',
+        ?string $inversedBy = null
+    ) {
+        if ($targetEntity === null) {
+            Deprecation::trigger(
+                'doctrine/orm',
+                'https://github.com/doctrine/orm/issues/8753',
+                'Passing no target entity is deprecated.'
+            );
+        }
+
+        $this->targetEntity = $targetEntity;
+        $this->cascade      = $cascade;
+        $this->fetch        = $fetch;
+        $this->inversedBy   = $inversedBy;
+    }
 }

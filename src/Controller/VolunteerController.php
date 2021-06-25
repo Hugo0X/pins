@@ -53,7 +53,7 @@ class VolunteerController extends AbstractController
 
         }
 
-        return $this->redirectToRoute('app_home');
+        return $this->redirectToRoute('app_pins_show', ['id' => $pin->getId()]);
     }
 
     /**
@@ -71,6 +71,6 @@ class VolunteerController extends AbstractController
             $this->addFlash('success', 'Your participation has been successfully deleted!');
         }
 
-        return $this->redirectToRoute('app_home');
+        return $this->redirectToRoute('app_pins_show', ['id' => $pin->getId()]);
     }
 }

@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-code for the canonical source repository
- * @copyright https://github.com/laminas/laminas-code/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-code/blob/master/LICENSE.md New BSD License
- */
-
 namespace Laminas\Code\Generator;
 
 use Laminas\Code\Reflection\PropertyReflection;
@@ -18,14 +12,11 @@ class PropertyGenerator extends AbstractMemberGenerator
 {
     public const FLAG_CONSTANT = 0x08;
 
-    /** @var bool */
-    protected $isConst;
+    protected bool $isConst = false;
 
-    /** @var PropertyValueGenerator */
-    protected $defaultValue;
+    protected ?PropertyValueGenerator $defaultValue = null;
 
-    /** @var bool */
-    private $omitDefaultValue = false;
+    private bool $omitDefaultValue = false;
 
     /**
      * @return static
@@ -38,7 +29,7 @@ class PropertyGenerator extends AbstractMemberGenerator
 
         $allDefaultProperties = $reflectionProperty->getDeclaringClass()->getDefaultProperties();
 
-        $defaultValue = $allDefaultProperties[$reflectionProperty->getName()];
+        $defaultValue = $allDefaultProperties[$reflectionProperty->getName()] ?? null;
         $property->setDefaultValue($defaultValue);
         if ($defaultValue === null) {
             $property->omitDefaultValue = true;
@@ -128,8 +119,8 @@ class PropertyGenerator extends AbstractMemberGenerator
     }
 
     /**
-     * @param string $name
-     * @param PropertyValueGenerator|string|array $defaultValue
+     * @param ?string $name
+     * @param PropertyValueGenerator|string|array|null $defaultValue
      * @param int $flags
      */
     public function __construct($name = null, $defaultValue = null, $flags = self::FLAG_PUBLIC)
@@ -189,7 +180,7 @@ class PropertyGenerator extends AbstractMemberGenerator
     }
 
     /**
-     * @return PropertyValueGenerator
+     * @return ?PropertyValueGenerator
      */
     public function getDefaultValue()
     {

@@ -21,6 +21,7 @@ file:
 # config/packages/webpack_encore.yaml
 webpack_encore:
     # The path where Encore is building the assets - i.e. Encore.setOutputPath()
+    # if you customize this, you will also need to change framework.assets.json_manifest_path (it usually lives in assets.yaml)
     output_path: '%kernel.project_dir%/public/build'
     # If multiple builds are defined (as shown below), you can disable the default build:
     # output_path: false
@@ -31,7 +32,7 @@ webpack_encore:
         # referrerpolicy: origin
     # link_attributes:
     #     referrerpolicy: origin
-    
+
     # if using Encore.enableIntegrityHashes() and need the crossorigin attribute (default: false, or use 'anonymous' or 'use-credentials')
     # crossorigin: 'anonymous'
 
@@ -40,7 +41,7 @@ webpack_encore:
 
     # Throw an exception if the entrypoints.json file is missing or an entry is missing from the data
     # strict_mode: false
-    
+
     # if you have multiple builds:
     # builds:
         # pass "frontend" as the 3rg arg to the Twig functions
@@ -173,8 +174,6 @@ different ways:
    event. For example:
 
 ```php
-<?php
-
 namespace App\EventSubscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -198,7 +197,9 @@ class ScriptNonceSubscriber implements EventSubscriberInterface
 }
 ```
 
-## Stimulus / Symfony UX Helper: stimulus_controller
+## Stimulus / Symfony UX Helper
+
+### stimulus_controller
 
 This bundle also ships with a special `stimulus_controller()` Twig function
 that can be used to render [Stimulus Controllers & Values](https://stimulus.hotwire.dev/reference/values).
@@ -215,7 +216,7 @@ For example:
 <div
    data-controller="chart"
    data-chart-name-value="Likes"
-   data-chart-name-data="&#x5B;1,2,3,4&#x5D;"
+   data-chart-data-value="&#x5B;1,2,3,4&#x5D;"
 >
    Hello
 </div>
@@ -233,6 +234,70 @@ associative array in the first argument:
     'chart': { 'name': 'Likes' },
     'other-controller': { },
 ) }}>
+    Hello
+</div>
+```
+
+### stimulus_action
+
+The `stimulus_action()` Twig function can be used to render [Stimulus Actions](https://stimulus.hotwire.dev/reference/actions).
+
+For example:
+
+```twig
+<div {{ stimulus_action('controller', 'method') }}>Hello</div>
+<div {{ stimulus_action('controller', 'method', 'click') }}>Hello</div>
+
+<!-- would render -->
+<div data-action="controller#method">Hello</div>
+<div data-action="click->controller#method">Hello</div>
+```
+
+If you have multiple actions and/or methods on the same element, pass them all as an
+associative array in the first argument:
+
+```twig
+<div {{ stimulus_action({
+ 'controller': 'method',
+ 'other-controller': ['method', {'window@resize': 'onWindowResize'}]
+}) }}>
+    Hello
+</div>
+
+<!-- would render -->
+<div data-action="controller#method other-controller#method window@resize->other-controller#onWindowResize">
+    Hello
+</div>
+```
+
+### stimulus_target
+
+The `stimulus_target()` Twig function can be used to render [Stimulus Targets](https://stimulus.hotwire.dev/reference/targets).
+
+For example:
+
+```twig
+<div {{ stimulus_target('controller', 'a-target') }}>Hello</div>
+<div {{ stimulus_target('controller', 'a-target second-target') }}>Hello</div>
+
+<!-- would render -->
+<div data-controller-target="a-target">Hello</div>
+<div data-controller-target="a-target second-target">Hello</div>
+```
+
+If you have multiple targets on the same element, pass them all as an
+associative array in the first argument:
+
+```twig
+<div {{ stimulus_target({
+ 'controller': 'a-target',
+ 'other-controller': 'another-target'
+}) }}>
+    Hello
+</div>
+
+<!-- would render -->
+<div data-controller-target="a-target" data-other-controller-target="another-target">
     Hello
 </div>
 ```

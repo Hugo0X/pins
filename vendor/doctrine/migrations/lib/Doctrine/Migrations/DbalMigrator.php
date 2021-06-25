@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Doctrine\Migrations;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\Migrations\Exception\MigrationConfigurationConflict;
 use Doctrine\Migrations\Metadata\MigrationPlanList;
 use Doctrine\Migrations\Query\Query;
 use Doctrine\Migrations\Tools\BytesFormatter;
+use Doctrine\Migrations\Tools\TransactionHelper;
 use Doctrine\Migrations\Version\Executor;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
@@ -64,6 +66,7 @@ class DbalMigrator implements Migrator
         $allOrNothing = $migratorConfiguration->isAllOrNothing();
 
         if ($allOrNothing) {
+            $this->assertAllMigrationsAreTransactional($migrationsPlan);
             $this->connection->beginTransaction();
         }
 
@@ -75,17 +78,26 @@ class DbalMigrator implements Migrator
             $this->dispatcher->dispatchMigrationEvent(Events::onMigrationsMigrated, $migrationsPlan, $migratorConfiguration);
         } catch (Throwable $e) {
             if ($allOrNothing) {
-                $this->connection->rollBack();
+                TransactionHelper::rollbackIfInTransaction($this->connection);
             }
 
             throw $e;
         }
 
         if ($allOrNothing) {
-            $this->connection->commit();
+            TransactionHelper::commitIfInTransaction($this->connection);
         }
 
         return $sql;
+    }
+
+    private function assertAllMigrationsAreTransactional(MigrationPlanList $migrationsPlan): void
+    {
+        foreach ($migrationsPlan->getItems() as $plan) {
+            if (! $plan->getMigration()->isTransactional()) {
+                throw MigrationConfigurationConflict::migrationIsNotTransactional($plan->getMigration());
+            }
+        }
     }
 
     /**

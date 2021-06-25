@@ -107,13 +107,13 @@ Now, in the root of your project place a file named ``migrations.php``, ``migrat
             },
 
             "migrations_paths": {
-               "MyProject\Migrations": "/data/doctrine/migrations/lib/MyProject/Migrations",
-               "MyProject\Component\Migrations": "./Component/MyProject/Migrations"
+               "MyProject\\Migrations": "/data/doctrine/migrations/lib/MyProject/Migrations",
+               "MyProject\\Component\\Migrations": "./Component/MyProject/Migrations"
             },
 
             "all_or_nothing": true,
             "check_database_platform": true,
-            "organize_migrations": "none"
+            "organize_migrations": "none",
 
             "connection": null,
             "em": null
@@ -221,7 +221,7 @@ All or Nothing Transaction
 
 .. note::
 
-    This is only works if your database supports transactions for DDL statements.
+    This only works if your database supports transactions for DDL statements.
 
 When using the ``all_or_nothing`` option, multiple migrations ran at the same time will be wrapped in a single
 transaction. If one migration fails, all migrations will be rolled back

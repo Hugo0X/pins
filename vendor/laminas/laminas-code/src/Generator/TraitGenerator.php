@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-code for the canonical source repository
- * @copyright https://github.com/laminas/laminas-code/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-code/blob/master/LICENSE.md New BSD License
- */
-
 namespace Laminas\Code\Generator;
 
 use Laminas\Code\Reflection\ClassReflection;
@@ -49,9 +43,11 @@ class TraitGenerator extends ClassGenerator
 
         $methods = [];
         foreach ($classReflection->getMethods() as $reflectionMethod) {
-            $className = $cg->getNamespaceName()
-                ? $cg->getNamespaceName() . '\\' . $cg->getName()
-                : $cg->getName();
+            $className     = $cg->getName();
+            $namespaceName = $cg->getNamespaceName();
+            if ($namespaceName !== null) {
+                $className = $namespaceName . '\\' . $className;
+            }
             if ($reflectionMethod->getDeclaringClass()->getName() == $className) {
                 $methods[] = MethodGenerator::fromReflection($reflectionMethod);
             }
@@ -109,8 +105,8 @@ class TraitGenerator extends ClassGenerator
     }
 
     /**
-     * @param  array|string $flags
-     * @return self
+     * @inheritDoc
+     * @param int[]|int $flags
      */
     public function setFlags($flags)
     {
@@ -118,7 +114,7 @@ class TraitGenerator extends ClassGenerator
     }
 
     /**
-     * @param  string $flag
+     * @param int $flag
      * @return self
      */
     public function addFlag($flag)
@@ -127,7 +123,7 @@ class TraitGenerator extends ClassGenerator
     }
 
     /**
-     * @param  string $flag
+     * @param int $flag
      * @return self
      */
     public function removeFlag($flag)
@@ -136,8 +132,7 @@ class TraitGenerator extends ClassGenerator
     }
 
     /**
-     * @param  bool $isFinal
-     * @return self
+     * @inheritDoc
      */
     public function setFinal($isFinal)
     {
@@ -145,7 +140,7 @@ class TraitGenerator extends ClassGenerator
     }
 
     /**
-     * @param  string $extendedClass
+     * @param ?string $extendedClass
      * @return self
      */
     public function setExtendedClass($extendedClass)
@@ -154,8 +149,7 @@ class TraitGenerator extends ClassGenerator
     }
 
     /**
-     * @param  array $implementedInterfaces
-     * @return self
+     * @inheritDoc
      */
     public function setImplementedInterfaces(array $implementedInterfaces)
     {
@@ -163,8 +157,7 @@ class TraitGenerator extends ClassGenerator
     }
 
     /**
-     * @param  bool $isAbstract
-     * @return self
+     * @inheritDoc
      */
     public function setAbstract($isAbstract)
     {
